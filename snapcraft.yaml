@@ -1,0 +1,22 @@
+name: pphack
+summary: The Most Advanced Prototype Pollution Scanner
+description: |
+      The Most Advanced Prototype Pollution Scanner
+version: 0.0.1
+grade: stable
+base: core20
+
+confinement: strict
+
+apps:
+  pphack:
+    command: bin/pphack
+    plugs:
+      - home
+      - network
+
+parts:
+  pphack:
+    plugin: go
+    source-type: git
+    source: https://github.com/edoardottt/pphack
