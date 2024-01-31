@@ -79,11 +79,11 @@ Examples 💡
 Scan a single URL
 
 ```console
-pphack -u https://www.github.com
+pphack -u https://edoardottt.github.io/pp-test/
 ```
 
 ```console
-echo https://www.github.com | pphack
+echo https://edoardottt.github.io/pp-test/ | pphack
 ```
 
 Scan a list of URLs
