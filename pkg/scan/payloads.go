@@ -11,20 +11,24 @@ import (
 	"math/rand"
 )
 
-const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+const (
+	letterBytes   = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	payloadLength = 10
+)
 
 func randStringBytes(n int) string {
 	b := make([]byte, n)
 	for i := range b {
 		b[i] = letterBytes[rand.Intn(len(letterBytes))]
 	}
+
 	return string(b)
 }
 
 // GenPayload returns a ready to use HTTP GET query and the payload
 // used in the query.
 func GenPayload() (string, string) {
-	testPayload := randStringBytes(15)
+	testPayload := randStringBytes(payloadLength)
 
 	var payload = fmt.Sprintf("constructor.prototype." + testPayload + "=" + testPayload +
 		"&__proto__[" + testPayload + "]=" + testPayload +

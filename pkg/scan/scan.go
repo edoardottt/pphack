@@ -134,8 +134,8 @@ func execute(r *Runner) {
 
 				ctx, cancel := context.WithTimeout(pctx, time.Second*time.Duration(r.Options.Timeout))
 				ctx, _ = chromedp.NewContext(ctx)
-				var res string
 
+				var res string
 				chromedp.Run(ctx,
 					chromedp.Navigate(targetURL),
 					chromedp.Evaluate("window."+payload, &res),
