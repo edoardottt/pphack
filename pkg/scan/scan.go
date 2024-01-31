@@ -143,7 +143,7 @@ func execute(r *Runner) {
 				)
 				if err != nil {
 					if r.Options.Verbose {
-						gologger.Error().Msgf("%s", err)
+						gologger.Error().Msg(err.Error())
 					}
 
 					cancel()

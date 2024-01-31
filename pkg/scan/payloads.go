@@ -12,8 +12,8 @@ import (
 )
 
 const (
-	letterBytes   = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-	payloadLength = 10
+	letterBytes   = "abcdefghijklmnopqrstuvwxyz"
+	payloadLength = 6
 )
 
 func randStringBytes(n int) string {
