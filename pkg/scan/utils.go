@@ -17,8 +17,8 @@ const (
 	minURLLength = 4
 )
 
-// PrepareURL takes as input a string and prepares
-// the input URL in order to get the favicon icon.
+// PrepareURL takes as input a string (URL) and prepares
+// the input to be scanned.
 func PrepareURL(inputURL string) (string, string, error) {
 	if len(inputURL) < minURLLength {
 		return "", "", input.ErrMalformedURL
