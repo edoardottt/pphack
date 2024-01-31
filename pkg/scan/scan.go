@@ -128,8 +128,7 @@ func execute(r *Runner) {
 				defer pcancel()
 
 				if err := chromedp.Run(pctx); err != nil {
-					fmt.Fprintf(os.Stderr, "error starting browser: %s\n", err)
-					os.Exit(1)
+					gologger.Fatal().Msgf("error starting browser: %s", err)
 				}
 
 				ctx, cancel := context.WithTimeout(pctx, time.Second*time.Duration(r.Options.Timeout))
