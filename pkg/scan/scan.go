@@ -130,15 +130,25 @@ func execute(r *Runner) {
 				if err := chromedp.Run(pctx); err != nil {
 					gologger.Fatal().Msgf("error starting browser: %s", err)
 				}
+				// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! this should go out of the loop above
 
 				ctx, cancel := context.WithTimeout(pctx, time.Second*time.Duration(r.Options.Timeout))
 				ctx, _ = chromedp.NewContext(ctx)
 
 				var res string
-				chromedp.Run(ctx,
+
+				err = chromedp.Run(ctx,
 					chromedp.Navigate(targetURL),
 					chromedp.Evaluate("window."+payload, &res),
 				)
+				if err != nil {
+					if r.Options.Verbose {
+						gologger.Error().Msgf("%s", err)
+					}
+
+					cancel()
+					return
+				}
 
 				if resTrimmed := strings.TrimSpace(res); resTrimmed != "" {
 					r.Output <- targetURL
