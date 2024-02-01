@@ -96,6 +96,14 @@ func pushInput(r *Runner) {
 func execute(r *Runner) {
 	defer r.InWg.Done()
 
+	copts := append(chromedp.DefaultExecAllocatorOptions[:],
+		chromedp.Flag("ignore-certificate-errors", true),
+		chromedp.Flag("disable-extensions", true),
+		chromedp.Flag("disable-client-side-phishing-detection", true),
+		chromedp.Flag("disable-popup-blocking", true),
+		chromedp.UserAgent(r.UserAgent),
+	)
+
 	for i := 0; i < r.Options.Concurrency; i++ {
 		r.InWg.Add(1)
 
@@ -113,14 +121,6 @@ func execute(r *Runner) {
 				}
 
 				// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! this should go out of the loop above
-				copts := append(chromedp.DefaultExecAllocatorOptions[:],
-					chromedp.Flag("ignore-certificate-errors", true),
-					chromedp.Flag("disable-extensions", true),
-					chromedp.Flag("disable-client-side-phishing-detection", true),
-					chromedp.Flag("disable-popup-blocking", true),
-					chromedp.UserAgent(r.UserAgent),
-				)
-
 				ectx, ecancel := chromedp.NewExecAllocator(context.Background(), copts...)
 				defer ecancel()
 
@@ -143,7 +143,7 @@ func execute(r *Runner) {
 				)
 				if err != nil {
 					if r.Options.Verbose {
-						gologger.Error().Msgf("%s", err)
+						gologger.Error().Msg(err.Error())
 					}
 
 					cancel()

@@ -1,6 +1,6 @@
 module github.com/edoardottt/pphack
 
-go 1.21.1
+go 1.21
 
 require (
 	github.com/chromedp/chromedp v0.9.3
