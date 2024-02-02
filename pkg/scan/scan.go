@@ -24,12 +24,10 @@ import (
 )
 
 type Runner struct {
-	Input     chan string
-	Output    chan string
+	Input     []string
+	InputChan chan string
 	Result    output.Result
 	UserAgent string
-	InWg      *sync.WaitGroup
-	OutWg     *sync.WaitGroup
 	Options   input.Options
 	OutMutex  *sync.Mutex
 }
@@ -43,88 +41,48 @@ func New(options *input.Options) Runner {
 	}
 
 	return Runner{
-		Input:     make(chan string, options.Concurrency),
-		Output:    make(chan string, options.Concurrency),
+		Input:     []string{},
+		InputChan: make(chan string, options.Concurrency),
 		Result:    output.New(),
 		UserAgent: golazy.GenerateRandomUserAgent(),
-		InWg:      &sync.WaitGroup{},
-		OutWg:     &sync.WaitGroup{},
 		Options:   *options,
 		OutMutex:  &sync.Mutex{},
 	}
 }
 
 func (r *Runner) Run() {
-	r.InWg.Add(1)
-
-	go pushInput(r)
-	r.InWg.Add(1)
-
-	go execute(r)
-	r.OutWg.Add(1)
-
-	go pullOutput(r)
-	r.InWg.Wait()
-
-	close(r.Output)
-	r.OutWg.Wait()
-}
-
-func pushInput(r *Runner) {
-	defer r.InWg.Done()
-
-	if fileutil.HasStdin() {
-		scanner := bufio.NewScanner(os.Stdin)
-		for scanner.Scan() {
-			r.Input <- scanner.Text()
-		}
-	}
-
-	if r.Options.FileInput != "" {
-		for _, line := range golazy.RemoveDuplicateValues(golazy.ReadFileLineByLine(r.Options.FileInput)) {
-			r.Input <- line
-		}
-	}
-
-	if r.Options.Input != "" {
-		r.Input <- r.Options.Input
-	}
-
-	close(r.Input)
-}
-
-func execute(r *Runner) {
-	defer r.InWg.Done()
-
 	copts := append(chromedp.DefaultExecAllocatorOptions[:],
 		chromedp.Flag("ignore-certificate-errors", true),
 		chromedp.UserAgent(r.UserAgent),
 	)
 
+	ectx, ecancel := chromedp.NewExecAllocator(context.Background(), copts...)
+	defer ecancel()
+
+	pctx, pcancel := chromedp.NewContext(ectx)
+	defer pcancel()
+
+	if err := chromedp.Run(pctx); err != nil {
+		gologger.Fatal().Msgf("error starting browser: %s", err.Error())
+	}
+
+	var wg sync.WaitGroup
+
 	for i := 0; i < r.Options.Concurrency; i++ {
-		r.InWg.Add(1)
+		wg.Add(1)
 
 		go func() {
-			defer r.InWg.Done()
-
-			for value := range r.Input {
+			for value := range r.InputChan {
 				targetURL, payload, err := PrepareURL(value)
 				if err != nil {
 					if r.Options.Verbose {
-						gologger.Error().Msgf("%s", err)
+						gologger.Error().Msg(err.Error())
 					}
-
-					return
 				}
 
-				ectx, ecancel := chromedp.NewExecAllocator(context.Background(), copts...)
-				defer ecancel()
-
-				pctx, pcancel := chromedp.NewContext(ectx)
-				defer pcancel()
-
 				ctx, cancel := context.WithTimeout(pctx, time.Second*time.Duration(r.Options.Timeout))
-				defer cancel()
+
+				ctx, _ = chromedp.NewContext(ctx)
 
 				var res string
 
@@ -136,33 +94,52 @@ func execute(r *Runner) {
 					if r.Options.Verbose {
 						gologger.Error().Msg(err.Error())
 					}
-
-					return
 				}
 
 				if resTrimmed := strings.TrimSpace(res); resTrimmed != "" {
-					r.Output <- targetURL
+					writeOutput(r, targetURL)
 				}
+
+				cancel()
 			}
+
+			wg.Done()
 		}()
 	}
+
+	pushInput(r)
+
+	wg.Wait()
 }
 
-func pullOutput(r *Runner) {
-	defer r.OutWg.Done()
-
-	for o := range r.Output {
-		if !r.Result.Printed(o) {
-			r.OutWg.Add(1)
-
-			go writeOutput(r.OutWg, r.OutMutex, &r.Options, o)
+func pushInput(r *Runner) {
+	if fileutil.HasStdin() {
+		scanner := bufio.NewScanner(os.Stdin)
+		for scanner.Scan() {
+			r.InputChan <- scanner.Text()
 		}
+	}
+
+	if r.Options.FileInput != "" {
+		for _, line := range golazy.RemoveDuplicateValues(golazy.ReadFileLineByLine(r.Options.FileInput)) {
+			r.InputChan <- line
+		}
+	}
+
+	if r.Options.Input != "" {
+		r.InputChan <- r.Options.Input
+	}
+
+	close(r.InputChan)
+}
+
+func writeOutput(r *Runner, targetURL string) {
+	if !r.Result.Printed(targetURL) {
+		write(r.OutMutex, &r.Options, targetURL)
 	}
 }
 
-func writeOutput(wg *sync.WaitGroup, m *sync.Mutex, options *input.Options, o string) {
-	defer wg.Done()
-
+func write(m *sync.Mutex, options *input.Options, o string) {
 	if options.FileOutput != "" && options.Output == nil {
 		file, err := os.OpenFile(options.FileOutput, os.O_CREATE|os.O_RDWR|os.O_APPEND, 0644)
 		if err != nil {
