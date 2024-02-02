@@ -94,12 +94,20 @@ func pushInput(r *Runner) {
 }
 
 func execute(r *Runner) {
-	defer r.InWg.Done()
-
 	copts := append(chromedp.DefaultExecAllocatorOptions[:],
 		chromedp.Flag("ignore-certificate-errors", true),
 		chromedp.UserAgent(r.UserAgent),
 	)
+
+	ectx, ecancel := chromedp.NewExecAllocator(context.Background(), copts...)
+	defer ecancel()
+
+	pctx, pcancel := chromedp.NewContext(ectx)
+	defer pcancel()
+
+	if err := chromedp.Run(pctx); err != nil {
+		gologger.Fatal().Msgf("error starting browser: %s", err.Error())
+	}
 
 	for i := 0; i < r.Options.Concurrency; i++ {
 		r.InWg.Add(1)
@@ -111,21 +119,16 @@ func execute(r *Runner) {
 				targetURL, payload, err := PrepareURL(value)
 				if err != nil {
 					if r.Options.Verbose {
-						gologger.Error().Msgf("%s", err)
+						gologger.Error().Msg(err.Error())
 					}
 
 					return
 				}
 
-				ectx, ecancel := chromedp.NewExecAllocator(context.Background(), copts...)
-				defer ecancel()
-
-				pctx, pcancel := chromedp.NewContext(ectx)
-				defer pcancel()
-
 				ctx, cancel := context.WithTimeout(pctx, time.Second*time.Duration(r.Options.Timeout))
 				defer cancel()
 
+				ctx, _ = chromedp.NewContext(ctx)
 				var res string
 
 				err = chromedp.Run(ctx,
@@ -146,6 +149,9 @@ func execute(r *Runner) {
 			}
 		}()
 	}
+
+	r.InWg.Done()
+	r.InWg.Wait()
 }
 
 func pullOutput(r *Runner) {
