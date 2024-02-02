@@ -98,9 +98,6 @@ func execute(r *Runner) {
 
 	copts := append(chromedp.DefaultExecAllocatorOptions[:],
 		chromedp.Flag("ignore-certificate-errors", true),
-		chromedp.Flag("disable-extensions", true),
-		chromedp.Flag("disable-client-side-phishing-detection", true),
-		chromedp.Flag("disable-popup-blocking", true),
 		chromedp.UserAgent(r.UserAgent),
 	)
 
@@ -120,20 +117,14 @@ func execute(r *Runner) {
 					return
 				}
 
-				// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! this should go out of the loop above
 				ectx, ecancel := chromedp.NewExecAllocator(context.Background(), copts...)
 				defer ecancel()
 
 				pctx, pcancel := chromedp.NewContext(ectx)
 				defer pcancel()
 
-				if err := chromedp.Run(pctx); err != nil {
-					gologger.Fatal().Msgf("error starting browser: %s", err)
-				}
-				// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! this should go out of the loop above
-
 				ctx, cancel := context.WithTimeout(pctx, time.Second*time.Duration(r.Options.Timeout))
-				ctx, _ = chromedp.NewContext(ctx)
+				defer cancel()
 
 				var res string
 
@@ -146,16 +137,12 @@ func execute(r *Runner) {
 						gologger.Error().Msg(err.Error())
 					}
 
-					cancel()
-
 					return
 				}
 
 				if resTrimmed := strings.TrimSpace(res); resTrimmed != "" {
 					r.Output <- targetURL
 				}
-
-				cancel()
 			}
 		}()
 	}
