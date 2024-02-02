@@ -107,6 +107,7 @@ func execute(r *Runner) {
 				ctx, cancel := context.WithTimeout(pctx, time.Second*time.Duration(r.Options.Timeout))
 
 				ctx, _ = chromedp.NewContext(ctx)
+
 				var res string
 
 				err = chromedp.Run(ctx,
@@ -122,8 +123,10 @@ func execute(r *Runner) {
 				if resTrimmed := strings.TrimSpace(res); resTrimmed != "" {
 					writeOutput(r, targetURL)
 				}
+
 				cancel()
 			}
+
 			wg.Done()
 		}()
 	}
@@ -131,6 +134,7 @@ func execute(r *Runner) {
 	for _, value := range r.Input {
 		r.InputChan <- value
 	}
+
 	close(r.InputChan)
 
 	wg.Wait()
