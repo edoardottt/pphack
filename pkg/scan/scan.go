@@ -51,30 +51,6 @@ func New(options *input.Options) Runner {
 }
 
 func (r *Runner) Run() {
-	readInput(r)
-	execute(r)
-}
-
-func readInput(r *Runner) {
-	if fileutil.HasStdin() {
-		scanner := bufio.NewScanner(os.Stdin)
-		for scanner.Scan() {
-			r.Input = append(r.Input, scanner.Text())
-		}
-	}
-
-	if r.Options.FileInput != "" {
-		r.Input = append(r.Input,
-			golazy.RemoveDuplicateValues(golazy.ReadFileLineByLine(r.Options.FileInput))...,
-		)
-	}
-
-	if r.Options.Input != "" {
-		r.Input = append(r.Input, r.Options.Input)
-	}
-}
-
-func execute(r *Runner) {
 	copts := append(chromedp.DefaultExecAllocatorOptions[:],
 		chromedp.Flag("ignore-certificate-errors", true),
 		chromedp.UserAgent(r.UserAgent),
@@ -131,13 +107,30 @@ func execute(r *Runner) {
 		}()
 	}
 
-	for _, value := range r.Input {
-		r.InputChan <- value
+	pushInput(r)
+
+	wg.Wait()
+}
+
+func pushInput(r *Runner) {
+	if fileutil.HasStdin() {
+		scanner := bufio.NewScanner(os.Stdin)
+		for scanner.Scan() {
+			r.InputChan <- scanner.Text()
+		}
+	}
+
+	if r.Options.FileInput != "" {
+		for _, line := range golazy.RemoveDuplicateValues(golazy.ReadFileLineByLine(r.Options.FileInput)) {
+			r.InputChan <- line
+		}
+	}
+
+	if r.Options.Input != "" {
+		r.InputChan <- r.Options.Input
 	}
 
 	close(r.InputChan)
-
-	wg.Wait()
 }
 
 func writeOutput(r *Runner, targetURL string) {
