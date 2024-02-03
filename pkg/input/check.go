@@ -9,15 +9,18 @@ package input
 import (
 	"errors"
 	"fmt"
+	"regexp"
+	"strings"
 
 	fileutil "github.com/projectdiscovery/utils/file"
 )
 
 var (
-	ErrMutexFlags    = errors.New("incompatible flags specified")
-	ErrNoInput       = errors.New("no input specified")
-	ErrNegativeValue = errors.New("must be positive")
-	ErrMalformedURL  = errors.New("malformed input URL")
+	ErrMutexFlags       = errors.New("incompatible flags specified")
+	ErrNoInput          = errors.New("no input specified")
+	ErrNegativeValue    = errors.New("must be positive")
+	ErrMalformedURL     = errors.New("malformed input URL")
+	ErrMalformedPayload = errors.New("malformed input payload (follow javascript variables naming rules)")
 )
 
 func (options *Options) validateOptions() error {
@@ -33,5 +36,37 @@ func (options *Options) validateOptions() error {
 		return fmt.Errorf("%w", ErrNegativeValue)
 	}
 
+	if !payloadOk(options.Payload) {
+		return fmt.Errorf("%w", ErrMalformedPayload)
+	}
+
 	return nil
+}
+
+func payloadOk(payload string) bool {
+	if !(payload[0] == '_' || payload[0] == '$' || isLetter(payload[0])) {
+		return false
+	}
+
+	if strings.ContainsAny(payload, " ") {
+		return false
+	}
+
+	if !isAlphanumeric(payload[1:]) {
+		return false
+	}
+
+	return true
+}
+
+func isLetter(r byte) bool {
+	if (r < 'a' || r > 'z') && (r < 'A' || r > 'Z') {
+		return false
+	}
+
+	return true
+}
+
+func isAlphanumeric(s string) bool {
+	return regexp.MustCompile(`^[a-zA-Z0-9]+$`).MatchString(s)
 }

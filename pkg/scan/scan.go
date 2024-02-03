@@ -51,10 +51,7 @@ func New(options *input.Options) Runner {
 }
 
 func (r *Runner) Run() {
-	copts := append(chromedp.DefaultExecAllocatorOptions[:],
-		chromedp.Flag("ignore-certificate-errors", true),
-		chromedp.UserAgent(r.UserAgent),
-	)
+	copts := getChromeOptions(r)
 
 	ectx, ecancel := chromedp.NewExecAllocator(context.Background(), copts...)
 	defer ecancel()
@@ -73,7 +70,7 @@ func (r *Runner) Run() {
 
 		go func() {
 			for value := range r.InputChan {
-				targetURL, payload, err := PrepareURL(value)
+				targetURL, payload, err := PrepareURL(value, r.Options.Payload)
 				if err != nil {
 					if r.Options.Verbose {
 						gologger.Error().Msg(err.Error())
