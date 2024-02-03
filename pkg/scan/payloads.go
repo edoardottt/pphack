@@ -25,18 +25,28 @@ func randStringBytes(n int) string {
 	return string(b)
 }
 
-// GenPayload returns a ready to use HTTP GET query and the payload
-// used in the query.
+// GenPayload returns a ready to use HTTP GET query with a random generated payload
+// and the payload used in the query.
 func GenPayload() (string, string) {
 	testPayload := randStringBytes(payloadLength)
+	payload := genQueryPayload(testPayload)
 
-	var payload = fmt.Sprintf("constructor.prototype." + testPayload + "=" + testPayload +
+	return payload, testPayload
+}
+
+// GenCustomPayload returns a ready to use HTTP GET query with the payload
+// supplied and the payload.
+func GenCustomPayload(testPayload string) (string, string) {
+	var payload = genQueryPayload(testPayload)
+	return payload, testPayload
+}
+
+func genQueryPayload(testPayload string) string {
+	return fmt.Sprintf("constructor.prototype." + testPayload + "=" + testPayload +
 		"&__proto__[" + testPayload + "]=" + testPayload +
 		"&constructor[prototype][" + testPayload + "]=" + testPayload +
 		"&__proto__." + testPayload + "=" + testPayload +
 		"&__proto__." + testPayload + "=1|2|3" +
 		"&__proto__[" + testPayload + "]={\"json\":\"value\"}" +
 		"#__proto__[" + testPayload + "]=" + testPayload)
-
-	return payload, testPayload
 }
