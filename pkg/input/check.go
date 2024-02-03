@@ -44,6 +44,10 @@ func (options *Options) validateOptions() error {
 }
 
 func payloadOk(payload string) bool {
+	if payload == "" {
+		return true
+	}
+
 	if !(payload[0] == '_' || payload[0] == '$' || isLetter(payload[0])) {
 		return false
 	}
