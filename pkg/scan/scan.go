@@ -73,7 +73,7 @@ func (r *Runner) Run() {
 
 		go func() {
 			for value := range r.InputChan {
-				targetURL, payload, err := PrepareURL(value)
+				targetURL, payload, err := PrepareURL(value, r.Options.Payload)
 				if err != nil {
 					if r.Options.Verbose {
 						gologger.Error().Msg(err.Error())

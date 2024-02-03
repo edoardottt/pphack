@@ -26,11 +26,12 @@ type Options struct {
 	Input       string
 	FileInput   string
 	FileOutput  string
-	Verbose     bool
 	Output      io.Writer
-	Silent      bool
 	Concurrency int
 	Timeout     int
+	Payload     string
+	Silent      bool
+	Verbose     bool
 }
 
 // configureOutput configures the output on the screen.
@@ -58,6 +59,7 @@ func ParseOptions() *Options {
 	flagSet.CreateGroup("configs", "Configurations",
 		flagSet.IntVarP(&options.Concurrency, "concurrency", "c", DefaultConcurrency, `Concurrency level`),
 		flagSet.IntVarP(&options.Timeout, "timeout", "t", DefaultTimeout, `Connection timeout in seconds`),
+		flagSet.StringVarP(&options.Payload, "payload", "p", "", `Custom payload`),
 	)
 
 	// Output

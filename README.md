@@ -66,6 +66,7 @@ INPUT:
 CONFIGURATIONS:
    -c, -concurrency int  Concurrency level (default 50)
    -t, -timeout int      Connection timeout in seconds (default 10)
+   -p, -payload string   Custom payload
 
 OUTPUT:
    -o, -output string  File to write output results
