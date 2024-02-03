@@ -7,13 +7,10 @@ This repository is under MIT License https://github.com/edoardottt/pphack/blob/m
 package scan
 
 import (
-	"context"
 	"net/url"
 	"strings"
 
-	"github.com/chromedp/chromedp"
 	"github.com/edoardottt/pphack/pkg/input"
-	"github.com/projectdiscovery/gologger"
 )
 
 const (
@@ -48,29 +45,4 @@ func PrepareURL(inputURL, payloadInput string) (string, string, error) {
 	}
 
 	return u.Scheme + "://" + u.Host + u.Path + "?" + payload, testPayload, nil
-}
-
-func getChromeOptions(r *Runner) []func(*chromedp.ExecAllocator) {
-	copts := append(chromedp.DefaultExecAllocatorOptions[:],
-		chromedp.Flag("ignore-certificate-errors", true),
-		chromedp.UserAgent(r.UserAgent),
-	)
-
-	if r.Options.Proxy != "" {
-		copts = append(copts, chromedp.ProxyServer(r.Options.Proxy))
-	}
-
-	return copts
-}
-
-func getChromeBrowser(copts []func(*chromedp.ExecAllocator)) (context.CancelFunc,
-	context.Context, context.CancelFunc) {
-	ectx, ecancel := chromedp.NewExecAllocator(context.Background(), copts...)
-	pctx, pcancel := chromedp.NewContext(ectx)
-
-	if err := chromedp.Run(pctx); err != nil {
-		gologger.Fatal().Msgf("error starting browser: %s", err.Error())
-	}
-
-	return ecancel, pctx, pcancel
 }
