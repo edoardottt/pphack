@@ -20,17 +20,19 @@ import (
 const (
 	DefaultTimeout     = 10
 	DefaultConcurrency = 50
+	DefaultRateLimit   = 0
 )
 
 type Options struct {
 	Input       string
 	FileInput   string
 	FileOutput  string
+	Payload     string
 	Output      io.Writer
 	Concurrency int
 	Timeout     int
-	Payload     string
 	Proxy       string
+	RateLimit   int
 	Silent      bool
 	Verbose     bool
 }
@@ -55,13 +57,14 @@ func ParseOptions() *Options {
 	flagSet.CreateGroup("input", "Input",
 		flagSet.StringVarP(&options.Input, "url", "u", "", `Input URL`),
 		flagSet.StringVarP(&options.FileInput, "list", "l", "", `File containing input URLs`),
+		flagSet.StringVarP(&options.Payload, "payload", "p", "", `Custom payload`),
 	)
 
 	flagSet.CreateGroup("configs", "Configurations",
 		flagSet.IntVarP(&options.Concurrency, "concurrency", "c", DefaultConcurrency, `Concurrency level`),
 		flagSet.IntVarP(&options.Timeout, "timeout", "t", DefaultTimeout, `Connection timeout in seconds`),
-		flagSet.StringVarP(&options.Payload, "payload", "p", "", `Custom payload`),
 		flagSet.StringVarP(&options.Proxy, "proxy", "px", "", `Set a proxy server (URL)`),
+		flagSet.IntVarP(&options.RateLimit, "rate-limit", "rl", DefaultRateLimit, `Set a rate limit`),
 	)
 
 	// Output

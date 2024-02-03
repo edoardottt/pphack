@@ -10,7 +10,6 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/chromedp/chromedp"
 	"github.com/edoardottt/pphack/pkg/input"
 )
 
@@ -46,17 +45,4 @@ func PrepareURL(inputURL, payloadInput string) (string, string, error) {
 	}
 
 	return u.Scheme + "://" + u.Host + u.Path + "?" + payload, testPayload, nil
-}
-
-func getChromeOptions(r *Runner) []func(*chromedp.ExecAllocator) {
-	copts := append(chromedp.DefaultExecAllocatorOptions[:],
-		chromedp.Flag("ignore-certificate-errors", true),
-		chromedp.UserAgent(r.UserAgent),
-	)
-
-	if r.Options.Proxy != "" {
-		copts = append(copts, chromedp.ProxyServer(r.Options.Proxy))
-	}
-
-	return copts
 }

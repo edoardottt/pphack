@@ -52,18 +52,15 @@ func New(options *input.Options) Runner {
 
 func (r *Runner) Run() {
 	copts := getChromeOptions(r)
+	ecancel, pctx, pcancel := getChromeBrowser(copts)
 
-	ectx, ecancel := chromedp.NewExecAllocator(context.Background(), copts...)
 	defer ecancel()
-
-	pctx, pcancel := chromedp.NewContext(ectx)
 	defer pcancel()
 
-	if err := chromedp.Run(pctx); err != nil {
-		gologger.Fatal().Msgf("error starting browser: %s", err.Error())
-	}
-
-	var wg sync.WaitGroup
+	var (
+		rl = rateLimiter(r)
+		wg sync.WaitGroup
+	)
 
 	for i := 0; i < r.Options.Concurrency; i++ {
 		wg.Add(1)
@@ -78,8 +75,9 @@ func (r *Runner) Run() {
 				}
 
 				ctx, cancel := context.WithTimeout(pctx, time.Second*time.Duration(r.Options.Timeout))
-
 				ctx, _ = chromedp.NewContext(ctx)
+
+				rl.Take()
 
 				var res string
 
