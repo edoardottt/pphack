@@ -3,7 +3,7 @@
   <br>
 </h1>
 
-<h4 align="center">The Most Advanced Prototype Pollution Scanner</h4>
+<h4 align="center">The Most Advanced Client-Side Prototype Pollution Scanner</h4>
 
 <h6 align="center"> Coded with 💙 by edoardottt </h6>
 
@@ -19,7 +19,7 @@
 
 <br>
   <!--Tweet button-->
-  <a href="https://twitter.com/intent/tweet?text=pphack%20-%20The%20Most%20Advanced%20Prototype%20Pollution%20Scanner%20https%3A%2F%2Fgithub.com%2Fedoardottt%2Fpphack%20%23golang%20%23github%20%23linux%20%23infosec%20%23bugbounty" target="_blank">Share on Twitter!
+  <a href="https://twitter.com/intent/tweet?text=pphack%20-%20The%20Most%20Advanced%20Client-Side%20Prototype%20Pollution%20Scanner%20https%3A%2F%2Fgithub.com%2Fedoardottt%2Fpphack%20%23golang%20%23github%20%23linux%20%23infosec%20%23bugbounty" target="_blank">Share on Twitter!
   </a>
 </p>
 

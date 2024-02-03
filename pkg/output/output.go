@@ -1,5 +1,5 @@
 /*
-pphack - The Most Advanced Prototype Pollution Scanner
+pphack - The Most Advanced Client-Side Prototype Pollution Scanner
 
 This repository is under MIT License https://github.com/edoardottt/pphack/blob/main/LICENSE
 */
