@@ -7,11 +7,13 @@ This repository is under MIT License https://github.com/edoardottt/pphack/blob/m
 package scan
 
 import (
+	"context"
 	"net/url"
 	"strings"
 
 	"github.com/chromedp/chromedp"
 	"github.com/edoardottt/pphack/pkg/input"
+	"github.com/projectdiscovery/gologger"
 )
 
 const (
@@ -59,4 +61,16 @@ func getChromeOptions(r *Runner) []func(*chromedp.ExecAllocator) {
 	}
 
 	return copts
+}
+
+func getChromeBrowser(copts []func(*chromedp.ExecAllocator)) (context.CancelFunc,
+	context.Context, context.CancelFunc) {
+	ectx, ecancel := chromedp.NewExecAllocator(context.Background(), copts...)
+	pctx, pcancel := chromedp.NewContext(ectx)
+
+	if err := chromedp.Run(pctx); err != nil {
+		gologger.Fatal().Msgf("error starting browser: %s", err.Error())
+	}
+
+	return ecancel, pctx, pcancel
 }

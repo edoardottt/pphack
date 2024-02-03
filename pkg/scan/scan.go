@@ -21,6 +21,7 @@ import (
 	"github.com/edoardottt/pphack/pkg/output"
 	"github.com/projectdiscovery/gologger"
 	fileutil "github.com/projectdiscovery/utils/file"
+	"go.uber.org/ratelimit"
 )
 
 type Runner struct {
@@ -53,15 +54,11 @@ func New(options *input.Options) Runner {
 func (r *Runner) Run() {
 	copts := getChromeOptions(r)
 
-	ectx, ecancel := chromedp.NewExecAllocator(context.Background(), copts...)
+	ecancel, pctx, pcancel := getChromeBrowser(copts)
 	defer ecancel()
-
-	pctx, pcancel := chromedp.NewContext(ectx)
 	defer pcancel()
 
-	if err := chromedp.Run(pctx); err != nil {
-		gologger.Fatal().Msgf("error starting browser: %s", err.Error())
-	}
+	var rl = rateLimiter(r)
 
 	var wg sync.WaitGroup
 
@@ -82,6 +79,8 @@ func (r *Runner) Run() {
 				ctx, _ = chromedp.NewContext(ctx)
 
 				var res string
+
+				rl.Take()
 
 				err = chromedp.Run(ctx,
 					chromedp.Navigate(targetURL),
@@ -157,4 +156,15 @@ func write(m *sync.Mutex, options *input.Options, o string) {
 	m.Unlock()
 
 	fmt.Println(o)
+}
+
+func rateLimiter(r *Runner) ratelimit.Limiter {
+	var ratelimiter ratelimit.Limiter
+	if r.Options.RateLimit > 0 {
+		ratelimiter = ratelimit.New(r.Options.RateLimit)
+	} else {
+		ratelimiter = ratelimit.NewUnlimited()
+	}
+
+	return ratelimiter
 }
