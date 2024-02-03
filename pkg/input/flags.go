@@ -30,6 +30,7 @@ type Options struct {
 	Concurrency int
 	Timeout     int
 	Payload     string
+	Proxy       string
 	Silent      bool
 	Verbose     bool
 }
@@ -60,6 +61,7 @@ func ParseOptions() *Options {
 		flagSet.IntVarP(&options.Concurrency, "concurrency", "c", DefaultConcurrency, `Concurrency level`),
 		flagSet.IntVarP(&options.Timeout, "timeout", "t", DefaultTimeout, `Connection timeout in seconds`),
 		flagSet.StringVarP(&options.Payload, "payload", "p", "", `Custom payload`),
+		flagSet.StringVarP(&options.Proxy, "proxy", "px", "", `Set a proxy server (URL)`),
 	)
 
 	// Output

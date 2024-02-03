@@ -51,10 +51,7 @@ func New(options *input.Options) Runner {
 }
 
 func (r *Runner) Run() {
-	copts := append(chromedp.DefaultExecAllocatorOptions[:],
-		chromedp.Flag("ignore-certificate-errors", true),
-		chromedp.UserAgent(r.UserAgent),
-	)
+	copts := getChromeOptions(r)
 
 	ectx, ecancel := chromedp.NewExecAllocator(context.Background(), copts...)
 	defer ecancel()

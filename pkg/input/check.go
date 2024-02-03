@@ -63,6 +63,7 @@ func isLetter(r byte) bool {
 	if (r < 'a' || r > 'z') && (r < 'A' || r > 'Z') {
 		return false
 	}
+
 	return true
 }
 
