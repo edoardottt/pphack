@@ -39,12 +39,6 @@
 Install 📡
 ----------
 
-### Using Snap
-
-```console
-sudo snap install pphack
-```
-
 ### Using Go
 
 ```console
