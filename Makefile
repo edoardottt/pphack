@@ -16,7 +16,7 @@ lint:
 	@golangci-lint run
 
 build:
-	@go build cmd/pphack.go
+	@go build ./cmd/pphack/
 	@sudo mv pphack /usr/local/bin/
 	@echo "Done."
 
