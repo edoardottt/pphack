@@ -16,18 +16,19 @@ const (
 	payloadLength = 6
 )
 
-func randStringBytes(n int) string {
-	b := make([]byte, n)
-	for i := range b {
-		b[i] = letterBytes[rand.Intn(len(letterBytes))]
+// GetTestPayload returns the payload specified as input
+// or a random payload with a specified length.
+func GetTestPayload(r *Runner, length int) string {
+	if r.Options.Payload != "" {
+		return r.Options.Payload
 	}
 
-	return string(b)
+	return randStringBytes(length)
 }
 
-// GenPayload returns a ready to use HTTP GET query with a random generated payload
+// GenQueryPayload returns a ready to use HTTP GET query with a random generated payload
 // and the payload used in the query.
-func GenPayload() (string, string) {
+func GenQueryPayload() (string, string) {
 	testPayload := randStringBytes(payloadLength)
 	payload := genQueryPayload(testPayload)
 
@@ -35,10 +36,19 @@ func GenPayload() (string, string) {
 }
 
 // GenCustomPayload returns a ready to use HTTP GET query with the payload
-// supplied and the payload.
-func GenCustomPayload(testPayload string) (string, string) {
+// supplied as input.
+func GenCustomQueryPayload(testPayload string) string {
 	var payload = genQueryPayload(testPayload)
-	return payload, testPayload
+	return payload
+}
+
+func randStringBytes(n int) string {
+	b := make([]byte, n)
+	for i := range b {
+		b[i] = letterBytes[rand.Intn(len(letterBytes))]
+	}
+
+	return string(b)
 }
 
 func genQueryPayload(testPayload string) string {

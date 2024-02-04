@@ -19,9 +19,9 @@ const (
 
 // PrepareURL takes as input a string (URL) and prepares
 // the input to be scanned.
-func PrepareURL(inputURL, payloadInput string) (string, string, error) {
+func PrepareURL(inputURL, testPayload string) (string, error) {
 	if len(inputURL) < minURLLength {
-		return "", "", input.ErrMalformedURL
+		return "", input.ErrMalformedURL
 	}
 
 	if !strings.Contains(inputURL, "://") {
@@ -30,19 +30,10 @@ func PrepareURL(inputURL, payloadInput string) (string, string, error) {
 
 	u, err := url.Parse(inputURL)
 	if err != nil {
-		return "", "", err
+		return "", err
 	}
 
-	var (
-		payload     string
-		testPayload string
-	)
+	payload := genQueryPayload(testPayload)
 
-	if payloadInput != "" {
-		payload, testPayload = GenCustomPayload(payloadInput)
-	} else {
-		payload, testPayload = GenPayload()
-	}
-
-	return u.Scheme + "://" + u.Host + u.Path + "?" + payload, testPayload, nil
+	return u.Scheme + "://" + u.Host + u.Path + "?" + payload, nil
 }

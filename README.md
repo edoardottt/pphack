@@ -60,15 +60,19 @@ Usage:
 
 Flags:
 INPUT:
-   -u, -url string      Input URL
-   -l, -list string     File containing input URLs
-   -p, -payload string  Custom payload
+   -u, -url string   Input URL
+   -l, -list string  File containing input URLs
 
-CONFIGURATIONS:
+CONFIGURATION:
    -c, -concurrency int  Concurrency level (default 50)
    -t, -timeout int      Connection timeout in seconds (default 10)
    -px, -proxy string    Set a proxy server (URL)
-   -rl, -rate-limit int  Set a rate limit
+   -rl, -rate-limit int  Set a rate limit (per second)
+
+SCAN:
+   -p, -payload string            Custom payload
+   -js, -javascript string        Run custom Javascript on target
+   -jsf, -javascript-file string  File containing custom Javascript to run on target
 
 OUTPUT:
    -o, -output string  File to write output results
