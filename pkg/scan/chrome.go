@@ -13,7 +13,7 @@ import (
 	"github.com/projectdiscovery/gologger"
 )
 
-func getChromeOptions(r *Runner) []func(*chromedp.ExecAllocator) {
+func GetChromeOptions(r *Runner) []func(*chromedp.ExecAllocator) {
 	copts := append(chromedp.DefaultExecAllocatorOptions[:],
 		chromedp.Flag("ignore-certificate-errors", true),
 		chromedp.UserAgent(r.UserAgent),
@@ -26,7 +26,7 @@ func getChromeOptions(r *Runner) []func(*chromedp.ExecAllocator) {
 	return copts
 }
 
-func getChromeBrowser(copts []func(*chromedp.ExecAllocator)) (context.CancelFunc,
+func GetChromeBrowser(copts []func(*chromedp.ExecAllocator)) (context.CancelFunc,
 	context.Context, context.CancelFunc) {
 	ectx, ecancel := chromedp.NewExecAllocator(context.Background(), copts...)
 	pctx, pcancel := chromedp.NewContext(ectx)

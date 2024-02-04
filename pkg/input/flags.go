@@ -23,6 +23,7 @@ const (
 	DefaultRateLimit   = 0
 )
 
+// Options struct holds all the configuration settings.
 type Options struct {
 	Input       string
 	FileInput   string
@@ -32,6 +33,7 @@ type Options struct {
 	Concurrency int
 	Timeout     int
 	Proxy       string
+	UserAgent   string
 	JS          string
 	JSFile      string
 	RateLimit   int
@@ -55,19 +57,22 @@ func ParseOptions() *Options {
 	flagSet := goflags.NewFlagSet()
 	flagSet.SetDescription(`The Most Advanced Client-Side Prototype Pollution Scanner.`)
 
-	// Input
+	// Input.
 	flagSet.CreateGroup("input", "Input",
 		flagSet.StringVarP(&options.Input, "url", "u", "", `Input URL`),
 		flagSet.StringVarP(&options.FileInput, "list", "l", "", `File containing input URLs`),
 	)
 
+	// Config.
 	flagSet.CreateGroup("config", "Configuration",
 		flagSet.IntVarP(&options.Concurrency, "concurrency", "c", DefaultConcurrency, `Concurrency level`),
 		flagSet.IntVarP(&options.Timeout, "timeout", "t", DefaultTimeout, `Connection timeout in seconds`),
 		flagSet.StringVarP(&options.Proxy, "proxy", "px", "", `Set a proxy server (URL)`),
 		flagSet.IntVarP(&options.RateLimit, "rate-limit", "rl", DefaultRateLimit, `Set a rate limit (per second)`),
+		flagSet.StringVarP(&options.UserAgent, "user-agent", "ua", "", `Set a custom User Agent (random by default)`),
 	)
 
+	// Scan.
 	flagSet.CreateGroup("scan", "Scan",
 		flagSet.StringVarP(&options.Payload, "payload", "p", "", `Custom payload`),
 		flagSet.StringVarP(&options.JS, "javascript", "js", "", `Run custom Javascript on target`),
@@ -75,7 +80,7 @@ func ParseOptions() *Options {
 			`File containing custom Javascript to run on target`),
 	)
 
-	// Output
+	// Output.
 	flagSet.CreateGroup("output", "Output",
 		flagSet.StringVarP(&options.FileOutput, "output", "o", "", `File to write output results`),
 		flagSet.BoolVarP(&options.Verbose, "verbose", "v", false, `Verbose output`),
