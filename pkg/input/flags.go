@@ -28,20 +28,21 @@ type Options struct {
 	Input       string
 	FileInput   string
 	FileOutput  string
-	Payload     string
 	Output      io.Writer
 	Concurrency int
 	Timeout     int
 	Proxy       string
 	UserAgent   string
-	JS          string
-	JSFile      string
-	RateLimit   int
-	Silent      bool
-	Verbose     bool
+	// Headers     goflags.StringSlice
+	// HeadersFile string
+	Payload   string
+	JS        string
+	JSFile    string
+	RateLimit int
+	Silent    bool
+	Verbose   bool
 }
 
-// configureOutput configures the output on the screen.
 func (options *Options) configureOutput() {
 	if options.Silent {
 		gologger.DefaultLogger.SetMaxLevel(levels.LevelSilent)
@@ -70,6 +71,8 @@ func ParseOptions() *Options {
 		flagSet.StringVarP(&options.Proxy, "proxy", "px", "", `Set a proxy server (URL)`),
 		flagSet.IntVarP(&options.RateLimit, "rate-limit", "rl", DefaultRateLimit, `Set a rate limit (per second)`),
 		flagSet.StringVarP(&options.UserAgent, "user-agent", "ua", "", `Set a custom User Agent (random by default)`),
+		// flagSet.StringSliceVarP(&options.Headers, "header", "H", nil, `Set custom header`, goflags.StringSliceOptions),
+		// flagSet.StringVarP(&options.HeadersFile, "headers-file", "Hf", "", `File containing custom headers`),
 	)
 
 	// Scan.

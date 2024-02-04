@@ -17,8 +17,8 @@ const (
 	minURLLength = 4
 )
 
-// PrepareURL takes as input a string (URL) and prepares
-// the input to be scanned.
+// PrepareURL takes as input a URL and a payload and returns the
+// final URL to scan.
 func PrepareURL(inputURL, testPayload string) (string, error) {
 	if len(inputURL) < minURLLength {
 		return "", input.ErrMalformedURL

@@ -24,7 +24,6 @@ import (
 )
 
 type Runner struct {
-	Input     []string
 	InputChan chan string
 	Result    output.Result
 	UserAgent string
@@ -43,7 +42,6 @@ func New(options *input.Options) (Runner, error) {
 	}
 
 	r = Runner{
-		Input:     []string{},
 		InputChan: make(chan string, options.Concurrency),
 		Result:    output.New(),
 		Options:   *options,
@@ -59,11 +57,46 @@ func New(options *input.Options) (Runner, error) {
 	return r, nil
 }
 
+func pushInput(r *Runner) {
+	if fileutil.HasStdin() {
+		scanner := bufio.NewScanner(os.Stdin)
+		for scanner.Scan() {
+			r.InputChan <- scanner.Text()
+		}
+	}
+
+	if r.Options.FileInput != "" {
+		for _, line := range golazy.RemoveDuplicateValues(golazy.ReadFileLineByLine(r.Options.FileInput)) {
+			r.InputChan <- line
+		}
+	}
+
+	if r.Options.Input != "" {
+		r.InputChan <- r.Options.Input
+	}
+
+	close(r.InputChan)
+}
+
 func (r *Runner) Run() {
 	copts := GetChromeOptions(r)
 	ecancel, pctx, pcancel := GetChromeBrowser(copts)
 	testPayload := GetTestPayload(r, payloadLength)
 	js := GetJavascript(r, testPayload)
+
+	/*
+
+		var headers map[string]interface{}
+
+		if len(r.Options.Headers) != 0 || r.Options.HeadersFile != "" {
+			h, err := GetHeaders(r)
+			if err != nil {
+				gologger.Fatal().Msg(err.Error())
+			}
+
+			headers = h
+		}
+	*/
 
 	defer ecancel()
 	defer pcancel()
@@ -90,12 +123,7 @@ func (r *Runner) Run() {
 
 				rl.Take()
 
-				var res string
-
-				err = chromedp.Run(ctx,
-					chromedp.Navigate(targetURL),
-					chromedp.Evaluate(js, &res),
-				)
+				res, err := Scan(ctx, js, targetURL)
 				if err != nil {
 					if r.Options.Verbose {
 						gologger.Error().Msg(err.Error())
@@ -116,27 +144,6 @@ func (r *Runner) Run() {
 	pushInput(r)
 
 	wg.Wait()
-}
-
-func pushInput(r *Runner) {
-	if fileutil.HasStdin() {
-		scanner := bufio.NewScanner(os.Stdin)
-		for scanner.Scan() {
-			r.InputChan <- scanner.Text()
-		}
-	}
-
-	if r.Options.FileInput != "" {
-		for _, line := range golazy.RemoveDuplicateValues(golazy.ReadFileLineByLine(r.Options.FileInput)) {
-			r.InputChan <- line
-		}
-	}
-
-	if r.Options.Input != "" {
-		r.InputChan <- r.Options.Input
-	}
-
-	close(r.InputChan)
 }
 
 func writeOutput(r *Runner, targetURL string) {

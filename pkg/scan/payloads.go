@@ -16,6 +16,16 @@ const (
 	payloadLength = 6
 )
 
+var (
+	defaultPayload = "constructor.prototype.%[1]s=%[1]s" +
+		"&__proto__[%[1]s]=%[1]s" +
+		"&constructor[prototype][%[1]s]=%[1]s" +
+		"&__proto__.%[1]s=%[1]s" +
+		"&__proto__.%[1]s=1|2|3" +
+		"&__proto__[%[1]s]={\"json\":\"value\"}" +
+		"#__proto__[%[1]s]=%[1]s"
+)
+
 // GetTestPayload returns the payload specified as input
 // or a random payload with a specified length.
 func GetTestPayload(r *Runner, length int) string {
@@ -52,11 +62,5 @@ func randStringBytes(n int) string {
 }
 
 func genQueryPayload(testPayload string) string {
-	return fmt.Sprintf("constructor.prototype." + testPayload + "=" + testPayload +
-		"&__proto__[" + testPayload + "]=" + testPayload +
-		"&constructor[prototype][" + testPayload + "]=" + testPayload +
-		"&__proto__." + testPayload + "=" + testPayload +
-		"&__proto__." + testPayload + "=1|2|3" +
-		"&__proto__[" + testPayload + "]={\"json\":\"value\"}" +
-		"#__proto__[" + testPayload + "]=" + testPayload)
+	return fmt.Sprintf(defaultPayload, testPayload)
 }

@@ -13,6 +13,8 @@ import (
 	"github.com/projectdiscovery/gologger"
 )
 
+// GetChromeOptions takes as input the runner settings and returns
+// the chrome options.
 func GetChromeOptions(r *Runner) []func(*chromedp.ExecAllocator) {
 	copts := append(chromedp.DefaultExecAllocatorOptions[:],
 		chromedp.Flag("ignore-certificate-errors", true),
@@ -26,6 +28,9 @@ func GetChromeOptions(r *Runner) []func(*chromedp.ExecAllocator) {
 	return copts
 }
 
+// GetChromeBrowser takes as input the chrome options and returns
+// the contexts with the associated cancel functions to use the
+// headless chrome browser it creates.
 func GetChromeBrowser(copts []func(*chromedp.ExecAllocator)) (context.CancelFunc,
 	context.Context, context.CancelFunc) {
 	ectx, ecancel := chromedp.NewExecAllocator(context.Background(), copts...)
@@ -36,4 +41,14 @@ func GetChromeBrowser(copts []func(*chromedp.ExecAllocator)) (context.CancelFunc
 	}
 
 	return ecancel, pctx, pcancel
+}
+
+func Scan(ctx context.Context, js, targetURL string) (string, error) {
+	var res string
+	err := chromedp.Run(ctx, chromedp.Tasks{
+		chromedp.Navigate(targetURL),
+		chromedp.EvaluateAsDevTools(js, &res)},
+	)
+
+	return res, err
 }
