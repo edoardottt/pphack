@@ -104,6 +104,8 @@ pphack -l targets.txt
 cat targets.txt | pphack
 ```
 
+[Read the Wiki](https://github.com/edoardottt/pphack/wiki) to understand how to use pphack.
+
 Changelog 📌
 -------
 
