@@ -32,6 +32,8 @@ type Options struct {
 	Concurrency int
 	Timeout     int
 	Proxy       string
+	JS          string
+	JSFile      string
 	RateLimit   int
 	Silent      bool
 	Verbose     bool
@@ -57,14 +59,20 @@ func ParseOptions() *Options {
 	flagSet.CreateGroup("input", "Input",
 		flagSet.StringVarP(&options.Input, "url", "u", "", `Input URL`),
 		flagSet.StringVarP(&options.FileInput, "list", "l", "", `File containing input URLs`),
-		flagSet.StringVarP(&options.Payload, "payload", "p", "", `Custom payload`),
 	)
 
-	flagSet.CreateGroup("configs", "Configurations",
+	flagSet.CreateGroup("config", "Configuration",
 		flagSet.IntVarP(&options.Concurrency, "concurrency", "c", DefaultConcurrency, `Concurrency level`),
 		flagSet.IntVarP(&options.Timeout, "timeout", "t", DefaultTimeout, `Connection timeout in seconds`),
 		flagSet.StringVarP(&options.Proxy, "proxy", "px", "", `Set a proxy server (URL)`),
-		flagSet.IntVarP(&options.RateLimit, "rate-limit", "rl", DefaultRateLimit, `Set a rate limit`),
+		flagSet.IntVarP(&options.RateLimit, "rate-limit", "rl", DefaultRateLimit, `Set a rate limit (per second)`),
+	)
+
+	flagSet.CreateGroup("scan", "Scan",
+		flagSet.StringVarP(&options.Payload, "payload", "p", "", `Custom payload`),
+		flagSet.StringVarP(&options.JS, "javascript", "js", "", `Run custom Javascript on target`),
+		flagSet.StringVarP(&options.JSFile, "javascript-file", "jsf", "",
+			`File containing custom Javascript to run on target`),
 	)
 
 	// Output

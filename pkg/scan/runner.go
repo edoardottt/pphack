@@ -53,6 +53,8 @@ func New(options *input.Options) Runner {
 func (r *Runner) Run() {
 	copts := getChromeOptions(r)
 	ecancel, pctx, pcancel := getChromeBrowser(copts)
+	testPayload := GetTestPayload(r, payloadLength)
+	js := getJavascript(r, testPayload)
 
 	defer ecancel()
 	defer pcancel()
@@ -67,7 +69,7 @@ func (r *Runner) Run() {
 
 		go func() {
 			for value := range r.InputChan {
-				targetURL, payload, err := PrepareURL(value, r.Options.Payload)
+				targetURL, err := PrepareURL(value, testPayload)
 				if err != nil {
 					if r.Options.Verbose {
 						gologger.Error().Msg(err.Error())
@@ -83,7 +85,7 @@ func (r *Runner) Run() {
 
 				err = chromedp.Run(ctx,
 					chromedp.Navigate(targetURL),
-					chromedp.Evaluate("window."+payload, &res),
+					chromedp.Evaluate(js, &res),
 				)
 				if err != nil {
 					if r.Options.Verbose {

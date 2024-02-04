@@ -40,6 +40,10 @@ func (options *Options) validateOptions() error {
 		return fmt.Errorf("rate limit: %w", ErrNegativeValue)
 	}
 
+	if options.JS != "" && options.JSFile != "" {
+		return fmt.Errorf("%w: %s and %s", ErrMutexFlags, "javascript", "javascript-file")
+	}
+
 	if !payloadOk(options.Payload) {
 		return fmt.Errorf("%w", ErrMalformedPayload)
 	}
