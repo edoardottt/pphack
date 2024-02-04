@@ -10,12 +10,11 @@ require (
 	github.com/projectdiscovery/utils v0.0.76
 )
 
-require github.com/benbjohnson/clock v1.3.0 // indirect
-
 require (
 	github.com/andybalholm/brotli v1.1.0 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
+	github.com/benbjohnson/clock v1.3.0 // indirect
 	github.com/chromedp/cdproto v0.0.0-20240202021202-6d0b6a386732 // indirect
 	github.com/chromedp/sysutil v1.0.0 // indirect
 	github.com/cnf/structhash v0.0.0-20201127153200-e1b16c1ebc08 // indirect

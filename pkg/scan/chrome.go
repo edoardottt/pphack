@@ -42,3 +42,13 @@ func GetChromeBrowser(copts []func(*chromedp.ExecAllocator)) (context.CancelFunc
 
 	return ecancel, pctx, pcancel
 }
+
+func Scan(ctx context.Context, js, targetURL string) (string, error) {
+	var res string
+	err := chromedp.Run(ctx, chromedp.Tasks{
+		chromedp.Navigate(targetURL),
+		chromedp.EvaluateAsDevTools(js, &res)},
+	)
+
+	return res, err
+}

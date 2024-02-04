@@ -84,6 +84,20 @@ func (r *Runner) Run() {
 	testPayload := GetTestPayload(r, payloadLength)
 	js := GetJavascript(r, testPayload)
 
+	/*
+
+		var headers map[string]interface{}
+
+		if len(r.Options.Headers) != 0 || r.Options.HeadersFile != "" {
+			h, err := GetHeaders(r)
+			if err != nil {
+				gologger.Fatal().Msg(err.Error())
+			}
+
+			headers = h
+		}
+	*/
+
 	defer ecancel()
 	defer pcancel()
 
@@ -109,12 +123,7 @@ func (r *Runner) Run() {
 
 				rl.Take()
 
-				var res string
-
-				err = chromedp.Run(ctx,
-					chromedp.Navigate(targetURL),
-					chromedp.Evaluate(js, &res),
-				)
+				res, err := Scan(ctx, js, targetURL)
 				if err != nil {
 					if r.Options.Verbose {
 						gologger.Error().Msg(err.Error())
