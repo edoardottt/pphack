@@ -10,11 +10,13 @@ import (
 	"sync"
 )
 
+// Result is the struct handling the output.
 type Result struct {
 	Map   map[string]struct{}
 	Mutex *sync.RWMutex
 }
 
+// New returns a new Result object.
 func New() Result {
 	return Result{
 		Map:   map[string]struct{}{},
@@ -22,6 +24,7 @@ func New() Result {
 	}
 }
 
+// Printed checks if a string was already printed.
 func (o *Result) Printed(result string) bool {
 	o.Mutex.RLock()
 	if _, ok := o.Map[result]; !ok {

@@ -21,6 +21,7 @@ const (
 /_/   /_/                             `
 )
 
+// ShowBanner prints the banner.
 func ShowBanner() {
 	if !printed {
 		gologger.Print().Msgf("%s%s\n\n", banner, Version)

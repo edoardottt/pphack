@@ -41,7 +41,6 @@ type Options struct {
 	Verbose     bool
 }
 
-// configureOutput configures the output on the screen.
 func (options *Options) configureOutput() {
 	if options.Silent {
 		gologger.DefaultLogger.SetMaxLevel(levels.LevelSilent)
