@@ -12,7 +12,9 @@ import (
 	"github.com/projectdiscovery/gologger"
 )
 
-func getJavascript(r *Runner, testPayload string) string {
+// GetJavascript returns the Javascript code must be run on
+// the target to verify the vulnerability.
+func GetJavascript(r *Runner, testPayload string) string {
 	if r.Options.JS != "" {
 		return r.Options.JS
 	}

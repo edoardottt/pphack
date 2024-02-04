@@ -51,10 +51,10 @@ func New(options *input.Options) Runner {
 }
 
 func (r *Runner) Run() {
-	copts := getChromeOptions(r)
-	ecancel, pctx, pcancel := getChromeBrowser(copts)
+	copts := GetChromeOptions(r)
+	ecancel, pctx, pcancel := GetChromeBrowser(copts)
 	testPayload := GetTestPayload(r, payloadLength)
-	js := getJavascript(r, testPayload)
+	js := GetJavascript(r, testPayload)
 
 	defer ecancel()
 	defer pcancel()
