@@ -32,22 +32,31 @@ type Runner struct {
 	OutMutex  *sync.Mutex
 }
 
-func New(options *input.Options) Runner {
+func New(options *input.Options) (Runner, error) {
+	r := Runner{}
+
 	if options.FileOutput != "" {
 		_, err := os.Create(options.FileOutput)
 		if err != nil {
-			gologger.Error().Msgf("%s", err)
+			return r, err
 		}
 	}
 
-	return Runner{
+	r = Runner{
 		Input:     []string{},
 		InputChan: make(chan string, options.Concurrency),
 		Result:    output.New(),
-		UserAgent: golazy.GenerateRandomUserAgent(),
 		Options:   *options,
 		OutMutex:  &sync.Mutex{},
 	}
+
+	if options.UserAgent != "" {
+		r.UserAgent = options.UserAgent
+	} else {
+		r.UserAgent = golazy.GenerateRandomUserAgent()
+	}
+
+	return r, nil
 }
 
 func (r *Runner) Run() {

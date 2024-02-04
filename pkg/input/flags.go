@@ -33,6 +33,7 @@ type Options struct {
 	Concurrency int
 	Timeout     int
 	Proxy       string
+	UserAgent   string
 	JS          string
 	JSFile      string
 	RateLimit   int
@@ -68,6 +69,7 @@ func ParseOptions() *Options {
 		flagSet.IntVarP(&options.Timeout, "timeout", "t", DefaultTimeout, `Connection timeout in seconds`),
 		flagSet.StringVarP(&options.Proxy, "proxy", "px", "", `Set a proxy server (URL)`),
 		flagSet.IntVarP(&options.RateLimit, "rate-limit", "rl", DefaultRateLimit, `Set a rate limit (per second)`),
+		flagSet.StringVarP(&options.UserAgent, "user-agent", "ua", "", `Set a custom User Agent (random by default)`),
 	)
 
 	// Scan.
