@@ -3,7 +3,7 @@ module github.com/edoardottt/pphack
 go 1.21
 
 require (
-	github.com/chromedp/chromedp v0.9.4
+	github.com/chromedp/chromedp v0.9.5
 	github.com/edoardottt/golazy v0.1.4
 	github.com/projectdiscovery/goflags v0.1.38
 	github.com/projectdiscovery/gologger v1.1.12
