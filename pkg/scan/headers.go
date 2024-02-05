@@ -7,14 +7,17 @@ This repository is under MIT License https://github.com/edoardottt/pphack/blob/m
 package scan
 
 import (
+	"bufio"
 	"errors"
+	"fmt"
+	"os"
+	"strings"
 )
 
 var (
 	ErrWrongHeaderFormat = errors.New("header with wrong format")
 )
 
-/*
 // GetHeaders returns the headers map.
 func GetHeaders(r *Runner) (map[string]interface{}, error) {
 	var (
@@ -91,5 +94,3 @@ func readHeadersFile(inputFile string) ([]string, error) {
 
 	return text, nil
 }
-
-*/
