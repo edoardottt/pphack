@@ -45,6 +45,8 @@ Install 📡
 go install github.com/edoardottt/pphack/cmd/pphack@latest
 ```
 
+pphack relies on [`chromedp`](https://github.com/chromedp/chromedp), so you need a Chrome or Chromium browser.
+
 Get Started 🎉
 ----------
 
