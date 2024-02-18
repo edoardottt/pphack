@@ -113,9 +113,7 @@ func (r *Runner) Run() {
 			for value := range r.InputChan {
 				targetURL, err := PrepareURL(value, testPayload)
 				if err != nil {
-					if r.Options.Verbose {
-						gologger.Error().Msg(err.Error())
-					}
+					verboseOutput(r, value, err)
 				}
 
 				ctx, cancel := context.WithTimeout(pctx, time.Second*time.Duration(r.Options.Timeout))
@@ -125,13 +123,15 @@ func (r *Runner) Run() {
 
 				res, err := Scan(ctx, js, targetURL)
 				if err != nil {
-					if r.Options.Verbose {
-						gologger.Error().Msg(err.Error())
-					}
+					verboseOutput(r, targetURL, err)
 				}
 
 				if resTrimmed := strings.TrimSpace(res); resTrimmed != "" {
-					writeOutput(r, targetURL)
+					if err != nil {
+						writeOutput(r, targetURL, res, err.Error())
+					} else {
+						writeOutput(r, targetURL, res, "")
+					}
 				}
 
 				cancel()
@@ -146,13 +146,13 @@ func (r *Runner) Run() {
 	wg.Wait()
 }
 
-func writeOutput(r *Runner, targetURL string) {
-	if !r.Result.Printed(targetURL) {
-		write(r.OutMutex, &r.Options, targetURL)
+func writeOutput(r *Runner, url, jsEval, err string) {
+	if !r.Result.Printed(url) {
+		write(r.OutMutex, &r.Options, url, jsEval, err)
 	}
 }
 
-func write(m *sync.Mutex, options *input.Options, o string) {
+func write(m *sync.Mutex, options *input.Options, u, jse, e string) {
 	if options.FileOutput != "" && options.Output == nil {
 		file, err := os.OpenFile(options.FileOutput, os.O_CREATE|os.O_RDWR|os.O_APPEND, 0644)
 		if err != nil {
@@ -162,15 +162,44 @@ func write(m *sync.Mutex, options *input.Options, o string) {
 		options.Output = file
 	}
 
+	var (
+		o   []byte
+		err error
+	)
+
+	if options.JSON {
+		o, err = output.FormatJSON(u, jse, e)
+		if err != nil {
+			gologger.Fatal().Msg(err.Error())
+		}
+	} else {
+		o = []byte(u)
+	}
+
 	m.Lock()
 
 	if options.Output != nil {
-		if _, err := options.Output.Write([]byte(o + "\n")); err != nil && options.Verbose {
+		if _, err := options.Output.Write([]byte(string(o) + "\n")); err != nil && options.Verbose {
 			gologger.Fatal().Msg(err.Error())
 		}
 	}
 
 	m.Unlock()
 
-	fmt.Println(o)
+	fmt.Println(string(o))
+}
+
+func verboseOutput(r *Runner, value string, err error) {
+	if r.Options.Verbose {
+		if r.Options.JSON {
+			o, err := output.FormatJSON(value, "", err.Error())
+			if err != nil {
+				gologger.Error().Msg(err.Error())
+			}
+
+			fmt.Println(string(o))
+		} else {
+			gologger.Error().Msg(err.Error())
+		}
+	}
 }
