@@ -75,6 +75,7 @@ OUTPUT:
    -o, -output string  File to write output results
    -v, -verbose        Verbose output
    -s, -silent         Silent output. Print only results
+   -j, -json           JSON output
 ```
 
 Examples 💡
