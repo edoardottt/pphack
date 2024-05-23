@@ -2,7 +2,7 @@ name: pphack
 summary: The Most Advanced Client-Side Prototype Pollution Scanner
 description: |
       The Most Advanced Client-Side Prototype Pollution Scanner
-version: 0.0.2
+version: 0.0.3
 grade: stable
 base: core20
 
