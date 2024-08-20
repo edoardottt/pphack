@@ -5,7 +5,7 @@ go 1.21
 require (
 	github.com/chromedp/chromedp v0.10.0
 	github.com/edoardottt/golazy v0.1.4
-	github.com/projectdiscovery/goflags v0.1.63
+	github.com/projectdiscovery/goflags v0.1.64
 	github.com/projectdiscovery/gologger v1.1.19
 	github.com/projectdiscovery/utils v0.2.5
 	go.uber.org/ratelimit v0.3.1
