@@ -7,7 +7,7 @@ require (
 	github.com/edoardottt/golazy v0.1.4
 	github.com/projectdiscovery/goflags v0.1.64
 	github.com/projectdiscovery/gologger v1.1.20
-	github.com/projectdiscovery/utils v0.2.6
+	github.com/projectdiscovery/utils v0.2.7
 	go.uber.org/ratelimit v0.3.1
 )
 
