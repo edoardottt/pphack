@@ -48,14 +48,14 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
-        go-version: '1.21'
+        go-version: '1.23'
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3
       with:
         languages: ${{ matrix.language }}
-        go-version: '1.21'
+        go-version: '1.23'
         # If you wish to specify custom queries, you can do so here or in a config file.
         # By default, queries listed here will override any specified in a config file.
         # Prefix the list here with "+" to use these queries and those in the config file.
@@ -69,7 +69,7 @@ jobs:
     - name: Autobuild
       uses: github/codeql-action/autobuild@v3
       with:
-        go-version: '1.21'
+        go-version: '1.23'
 
     # ℹ️ Command-line programs to run using the OS shell.
     # 📚 See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
@@ -84,5 +84,5 @@ jobs:
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
       with:
-        go-version: '1.21'
+        go-version: '1.23'
         category: "/language:${{matrix.language}}"
