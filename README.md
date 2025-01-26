@@ -60,11 +60,13 @@ INPUT:
    -l, -list string  File containing input URLs
 
 CONFIGURATION:
-   -c, -concurrency int     Concurrency level (default 50)
-   -t, -timeout int         Connection timeout in seconds (default 10)
-   -px, -proxy string       Set a proxy server (URL)
-   -rl, -rate-limit int     Set a rate limit (per second)
-   -ua, -user-agent string  Set a custom User Agent (random by default)
+   -c, -concurrency int       Concurrency level (default 50)
+   -t, -timeout int           Connection timeout in seconds (default 10)
+   -px, -proxy string         Set a proxy server (URL)
+   -rl, -rate-limit int       Set a rate limit (per second)
+   -ua, -user-agent string    Set a custom User Agent (random by default)
+   -H, -headers string[]      Set custom headers
+   -Hf, -headers-file string  File containing custom headers
 
 SCAN:
    -p, -payload string            Custom payload
