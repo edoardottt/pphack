@@ -33,7 +33,6 @@ linters:
     - staticcheck
     - stylecheck
     - testpackage
-    - typecheck
     - unconvert
     - unparam
     - unused

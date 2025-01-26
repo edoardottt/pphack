@@ -41,6 +41,7 @@ type Options struct {
 	RateLimit   int
 	Silent      bool
 	Verbose     bool
+	JSON        bool
 }
 
 func (options *Options) configureOutput() {
@@ -88,6 +89,7 @@ func ParseOptions() *Options {
 		flagSet.StringVarP(&options.FileOutput, "output", "o", "", `File to write output results`),
 		flagSet.BoolVarP(&options.Verbose, "verbose", "v", false, `Verbose output`),
 		flagSet.BoolVarP(&options.Silent, "silent", "s", false, `Silent output. Print only results`),
+		flagSet.BoolVarP(&options.JSON, "json", "j", false, `JSON output`),
 	)
 
 	if help() || noArgs() {
