@@ -8,6 +8,7 @@ require (
 	github.com/projectdiscovery/goflags v0.1.68
 	github.com/projectdiscovery/gologger v1.1.41
 	github.com/projectdiscovery/utils v0.4.7
+	go.uber.org/ratelimit v0.3.1
 )
 
 require (
@@ -48,7 +49,6 @@ require (
 	github.com/saintfish/chardet v0.0.0-20230101081208-5e3ef4b5456d // indirect
 	github.com/ulikunitz/xz v0.5.12 // indirect
 	github.com/xi2/xz v0.0.0-20171230120015-48954b6210f8 // indirect
-	go.uber.org/ratelimit v0.3.1
 	golang.org/x/exp v0.0.0-20250106191152-7588d65b2ba8 // indirect
 	golang.org/x/mod v0.22.0 // indirect
 	golang.org/x/net v0.34.0 // indirect
