@@ -49,7 +49,6 @@ func readHeaders(input []string) (map[string]interface{}, error) {
 	}
 
 	for _, h := range input {
-		fmt.Println(h)
 		hName, hValue, err := splitHeader(h)
 		if err != nil {
 			return nil, err
