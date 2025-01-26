@@ -9,6 +9,7 @@ package scan
 import (
 	"context"
 
+	"github.com/chromedp/cdproto/network"
 	"github.com/chromedp/chromedp"
 	"github.com/projectdiscovery/gologger"
 )
@@ -43,14 +44,22 @@ func GetChromeBrowser(copts []func(*chromedp.ExecAllocator)) (context.CancelFunc
 	return ecancel, pctx, pcancel
 }
 
-func Scan(ctx context.Context, js, targetURL string) (string, error) {
+func Scan(ctx context.Context, headers map[string]interface{}, js, targetURL string) (string, error) {
 	var res string
-	err := chromedp.Run(ctx, chromedp.Tasks{
-		// network.Enable(),
-		// network.SetExtraHTTPHeaders(network.Headers(headers)),
-		chromedp.Navigate(targetURL),
-		chromedp.EvaluateAsDevTools(js, &res)},
-	)
+
+	var err error
+	if headers != nil {
+		err = chromedp.Run(ctx, chromedp.Tasks{
+			network.SetExtraHTTPHeaders(network.Headers(headers)),
+			chromedp.Navigate(targetURL),
+			chromedp.EvaluateAsDevTools(js, &res)},
+		)
+	} else {
+		err = chromedp.Run(ctx, chromedp.Tasks{
+			chromedp.Navigate(targetURL),
+			chromedp.EvaluateAsDevTools(js, &res)},
+		)
+	}
 
 	return res, err
 }

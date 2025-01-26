@@ -44,11 +44,9 @@ func (options *Options) validateOptions() error {
 		return fmt.Errorf("%w: %s and %s", ErrMutexFlags, "javascript", "javascript-file")
 	}
 
-	/*
-		if len(options.Headers) != 0 && options.HeadersFile != "" {
-			return fmt.Errorf("%w: %s and %s", ErrMutexFlags, "headers", "headers-file")
-		}
-	*/
+	if len(options.Headers) != 0 && options.HeadersFile != "" {
+		return fmt.Errorf("%w: %s and %s", ErrMutexFlags, "headers", "headers-file")
+	}
 
 	if !payloadOk(options.Payload) {
 		return fmt.Errorf("%w", ErrMalformedPayload)

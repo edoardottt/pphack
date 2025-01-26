@@ -84,19 +84,16 @@ func (r *Runner) Run() {
 	testPayload := GetTestPayload(r, payloadLength)
 	js := GetJavascript(r, testPayload)
 
-	/*
+	var headers map[string]interface{}
 
-		var headers map[string]interface{}
-
-		if len(r.Options.Headers) != 0 || r.Options.HeadersFile != "" {
-			h, err := GetHeaders(r)
-			if err != nil {
-				gologger.Fatal().Msg(err.Error())
-			}
-
-			headers = h
+	if len(r.Options.Headers) != 0 || r.Options.HeadersFile != "" {
+		h, err := GetHeaders(r)
+		if err != nil {
+			gologger.Fatal().Msg(err.Error())
 		}
-	*/
+
+		headers = h
+	}
 
 	defer ecancel()
 	defer pcancel()
@@ -121,7 +118,7 @@ func (r *Runner) Run() {
 
 				rl.Take()
 
-				res, err := Scan(ctx, js, targetURL)
+				res, err := Scan(ctx, headers, js, targetURL)
 				if err != nil {
 					verboseOutput(r, targetURL, err)
 				}
