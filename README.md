@@ -45,6 +45,8 @@ Install 📡
 go install github.com/edoardottt/pphack/cmd/pphack@latest
 ```
 
+pphack relies on [`chromedp`](https://github.com/chromedp/chromedp), so you need a Chrome or Chromium browser.
+
 Get Started 🎉
 ----------
 
@@ -75,6 +77,7 @@ OUTPUT:
    -o, -output string  File to write output results
    -v, -verbose        Verbose output
    -s, -silent         Silent output. Print only results
+   -j, -json           JSON output
 ```
 
 Examples 💡
@@ -124,4 +127,4 @@ License 📝
 -------
 
 This repository is under [MIT License](https://github.com/edoardottt/pphack/blob/main/LICENSE).  
-[edoardoottavianelli.it](https://www.edoardoottavianelli.it) to contact me.
+[edoardottt.com](https://edoardottt.com/) to contact me.
