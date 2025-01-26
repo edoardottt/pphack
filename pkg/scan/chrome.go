@@ -8,7 +8,6 @@ package scan
 
 import (
 	"context"
-	"log"
 
 	"github.com/chromedp/cdproto/network"
 	"github.com/chromedp/chromedp"
@@ -36,7 +35,7 @@ func GetChromeOptions(r *Runner) []func(*chromedp.ExecAllocator) {
 func GetChromeBrowser(copts []func(*chromedp.ExecAllocator)) (context.CancelFunc,
 	context.Context, context.CancelFunc) {
 	ectx, ecancel := chromedp.NewExecAllocator(context.Background(), copts...)
-	pctx, pcancel := chromedp.NewContext(ectx, chromedp.WithDebugf(log.Printf))
+	pctx, pcancel := chromedp.NewContext(ectx)
 
 	if err := chromedp.Run(pctx); err != nil {
 		gologger.Fatal().Msgf("error starting browser: %s", err.Error())
@@ -47,11 +46,20 @@ func GetChromeBrowser(copts []func(*chromedp.ExecAllocator)) (context.CancelFunc
 
 func Scan(ctx context.Context, headers map[string]interface{}, js, targetURL string) (string, error) {
 	var res string
-	err := chromedp.Run(ctx, chromedp.Tasks{
-		network.SetExtraHTTPHeaders(network.Headers(headers)),
-		chromedp.Navigate(targetURL),
-		chromedp.EvaluateAsDevTools(js, &res)},
-	)
+
+	var err error
+	if headers != nil {
+		err = chromedp.Run(ctx, chromedp.Tasks{
+			network.SetExtraHTTPHeaders(network.Headers(headers)),
+			chromedp.Navigate(targetURL),
+			chromedp.EvaluateAsDevTools(js, &res)},
+		)
+	} else {
+		err = chromedp.Run(ctx, chromedp.Tasks{
+			chromedp.Navigate(targetURL),
+			chromedp.EvaluateAsDevTools(js, &res)},
+		)
+	}
 
 	return res, err
 }

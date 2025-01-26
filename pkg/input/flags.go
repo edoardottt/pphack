@@ -71,7 +71,7 @@ func ParseOptions() *Options {
 		flagSet.StringVarP(&options.Proxy, "proxy", "px", "", `Set a proxy server (URL)`),
 		flagSet.IntVarP(&options.RateLimit, "rate-limit", "rl", DefaultRateLimit, `Set a rate limit (per second)`),
 		flagSet.StringVarP(&options.UserAgent, "user-agent", "ua", "", `Set a custom User Agent (random by default)`),
-		flagSet.StringSliceVarP(&options.Headers, "header", "H", nil, `Set custom header`, goflags.StringSliceOptions),
+		flagSet.StringSliceVarP(&options.Headers, "headers", "H", nil, `Set custom headers`, goflags.CommaSeparatedStringSliceOptions),
 		flagSet.StringVarP(&options.HeadersFile, "headers-file", "Hf", "", `File containing custom headers`),
 	)
 
