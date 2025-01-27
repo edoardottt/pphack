@@ -38,6 +38,7 @@ type Options struct {
 	Payload     string
 	JS          string
 	JSFile      string
+	Exploit     bool
 	RateLimit   int
 	Silent      bool
 	Verbose     bool
@@ -83,6 +84,7 @@ func ParseOptions() *Options {
 		flagSet.StringVarP(&options.JS, "javascript", "js", "", `Run custom Javascript on target`),
 		flagSet.StringVarP(&options.JSFile, "javascript-file", "jsf", "",
 			`File containing custom Javascript to run on target`),
+		flagSet.BoolVarP(&options.Exploit, "exploit", "e", false, `Automatic Exploit Detection`),
 	)
 
 	// Output.
