@@ -11,7 +11,6 @@ linters:
     - err113
     - errcheck
     - exhaustive
-    - gochecknoinits
     - goconst
     - gocritic
     - godot
