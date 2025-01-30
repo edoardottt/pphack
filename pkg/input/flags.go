@@ -18,7 +18,7 @@ import (
 )
 
 const (
-	DefaultTimeout     = 10
+	DefaultTimeout     = 20
 	DefaultConcurrency = 50
 	DefaultRateLimit   = 0
 )
@@ -84,7 +84,7 @@ func ParseOptions() *Options {
 		flagSet.StringVarP(&options.JS, "javascript", "js", "", `Run custom Javascript on target`),
 		flagSet.StringVarP(&options.JSFile, "javascript-file", "jsf", "",
 			`File containing custom Javascript to run on target`),
-		flagSet.BoolVarP(&options.Exploit, "exploit", "e", false, `Automatic Exploit Detection`),
+		flagSet.BoolVarP(&options.Exploit, "exploit", "e", false, `Automatic Exploitation`),
 	)
 
 	// Output.

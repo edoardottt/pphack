@@ -8,9 +8,12 @@ package scan
 
 import (
 	"context"
+	"strings"
+	"time"
 
 	"github.com/chromedp/cdproto/network"
 	"github.com/chromedp/chromedp"
+	"github.com/edoardottt/pphack/pkg/exploit"
 	"github.com/projectdiscovery/gologger"
 )
 
@@ -44,22 +47,56 @@ func GetChromeBrowser(copts []func(*chromedp.ExecAllocator)) (context.CancelFunc
 	return ecancel, pctx, pcancel
 }
 
-func Scan(ctx context.Context, headers map[string]interface{}, js, targetURL string) (string, error) {
-	var res string
+// Scan is the actual function that takes as input a browser context, other info
+// and performs the scan.
+func Scan(pctx context.Context, headers map[string]interface{}, detection bool,
+	js, targetURL string) (string, []string, []string, error, error) {
+	var (
+		resScan                string
+		resDetection           []string
+		result                 []string
+		chromedpTasksScan      chromedp.Tasks
+		chromedpTasksDetection chromedp.Tasks
+		errScan                error
+		errDetection           error
+	)
 
-	var err error
 	if headers != nil {
-		err = chromedp.Run(ctx, chromedp.Tasks{
-			network.SetExtraHTTPHeaders(network.Headers(headers)),
-			chromedp.Navigate(targetURL),
-			chromedp.EvaluateAsDevTools(js, &res)},
-		)
-	} else {
-		err = chromedp.Run(ctx, chromedp.Tasks{
-			chromedp.Navigate(targetURL),
-			chromedp.EvaluateAsDevTools(js, &res)},
-		)
+		chromedpTasksScan = append(chromedpTasksScan, network.SetExtraHTTPHeaders(network.Headers(headers)))
 	}
 
-	return res, err
+	chromedpTasksScan = append(
+		chromedpTasksScan, chromedp.Navigate(targetURL),
+		chromedp.EvaluateAsDevTools(js, &resScan),
+	)
+
+	ctx, cancel := context.WithTimeout(pctx, time.Second*time.Duration(10))
+	ctx, _ = chromedp.NewContext(ctx)
+	defer cancel()
+
+	errScan = chromedp.Run(ctx, chromedpTasksScan)
+
+	// if I have to detect the exploit, no errors and it's vulnerable.
+	if detection && errScan == nil {
+		if resTrimmed := strings.TrimSpace(resScan); resTrimmed != "" {
+			chromedpTasksScan = append(chromedpTasksScan, chromedp.EvaluateAsDevTools(exploit.Fingerprint, &resDetection))
+
+			errDetection := chromedp.Run(ctx, chromedpTasksScan)
+			if errDetection != nil {
+				return resScan, resDetection, result, errScan, errDetection
+			}
+
+			if headers != nil {
+				chromedpTasksDetection = append(chromedpTasksDetection, network.SetExtraHTTPHeaders(network.Headers(headers)))
+			}
+
+			result, _ = exploit.CheckExploit(pctx, chromedpTasksDetection, resDetection, targetURL)
+
+			// if err != nil {
+			// verbose output
+			// }
+		}
+	}
+
+	return resScan, resDetection, result, errScan, errDetection
 }

@@ -8,14 +8,11 @@ package scan
 
 import (
 	"bufio"
-	"context"
 	"fmt"
 	"os"
 	"strings"
 	"sync"
-	"time"
 
-	"github.com/chromedp/chromedp"
 	"github.com/edoardottt/golazy"
 	"github.com/edoardottt/pphack/pkg/input"
 	"github.com/edoardottt/pphack/pkg/output"
@@ -113,25 +110,22 @@ func (r *Runner) Run() {
 					verboseOutput(r, value, err)
 				}
 
-				ctx, cancel := context.WithTimeout(pctx, time.Second*time.Duration(r.Options.Timeout))
-				ctx, _ = chromedp.NewContext(ctx)
-
 				rl.Take()
 
-				res, err := Scan(ctx, headers, js, targetURL)
-				if err != nil {
+				resScan, resDetection, result, errScan, errDetection := Scan(pctx, headers, r.Options.Exploit, js, targetURL)
+				if errScan != nil {
 					verboseOutput(r, targetURL, err)
 				}
 
-				if resTrimmed := strings.TrimSpace(res); resTrimmed != "" {
+				if resTrimmed := strings.TrimSpace(resScan); resTrimmed != "" {
 					if err != nil {
-						writeOutput(r, targetURL, res, err.Error())
+						writeOutput(r, targetURL, resScan, err.Error())
 					} else {
-						writeOutput(r, targetURL, res, "")
+						writeOutput(r, targetURL, resScan, "")
 					}
 				}
 
-				cancel()
+				fmt.Println(resDetection, result, errDetection)
 			}
 
 			wg.Done()
