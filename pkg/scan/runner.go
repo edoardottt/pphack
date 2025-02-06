@@ -165,7 +165,7 @@ func write(m *sync.Mutex, options *input.Options, resultData output.ResultData) 
 		fmt.Println(string(o))
 	} else {
 		if options.Exploit {
-			if false {
+			if len(resultData.ExploitURLs) != 0 {
 				var str string
 				for _, e := range resultData.ExploitURLs {
 					str += fmt.Sprintf("[EXPLOIT] %s\n", e)
