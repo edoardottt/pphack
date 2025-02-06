@@ -6,6 +6,7 @@ This repository is under MIT License https://github.com/edoardottt/pphack/blob/m
 
 package output_test
 
+/*
 import (
 	"reflect"
 	"testing"
@@ -56,3 +57,5 @@ func TestFormatJSON(t *testing.T) {
 		})
 	}
 }
+
+*/

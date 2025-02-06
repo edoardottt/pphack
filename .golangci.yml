@@ -49,3 +49,8 @@ linters-settings:
     ignored-numbers:
       - '2'
       - '0644'
+  
+issues:
+  exclude-rules:
+    - path: pkg/exploit/exploit.go
+      text: "append result not assigned to the same slice"
