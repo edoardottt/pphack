@@ -61,7 +61,8 @@ func TestFormatJSON(t *testing.T) {
 					"&__proto__[dataType]=script",
 					"https://edoardottt.github.io/pp-test/?__proto__[context]=%3Cimg/src/onerror%3dalert(1337)" +
 						"%3E&__proto__[jquery]=x"},
-				ScanError: "",
+				ScanError:  "",
+				References: []string{"https://github.com/BlackFan/client-side-prototype-pollution/blob/master/gadgets/jquery.md"},
 			},
 			want: `{"TargetURL":"https://edoardottt.github.io/pp-test",` +
 				`"ScanURL":"https://edoardottt.github.io/pp-test?constructor.prototype.lfhfqn=lfhfqn` +
@@ -71,7 +72,8 @@ func TestFormatJSON(t *testing.T) {
 				`"Fingerprint":["jQuery"],` +
 				`"ExploitURLs":["https://edoardottt.github.io/pp-test/?__proto__[url][]=data:,alert(1337)//` +
 				`&__proto__[dataType]=script","https://edoardottt.github.io/pp-test/?__proto__[context]=` +
-				`%3Cimg/src/onerror%3dalert(1337)%3E&__proto__[jquery]=x"]}`,
+				`%3Cimg/src/onerror%3dalert(1337)%3E&__proto__[jquery]=x"],` +
+				`"References":["https://github.com/BlackFan/client-side-prototype-pollution/blob/master/gadgets/jquery.md"]}`,
 		},
 	}
 

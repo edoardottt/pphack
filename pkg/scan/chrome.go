@@ -101,6 +101,7 @@ func Scan(pctx context.Context, r *Runner, headers map[string]interface{},
 			}
 
 			resultData.Fingerprint = resDetection
+			resultData.References = exploit.GetReferences(resDetection)
 
 			if errDetection != nil {
 				resultData.FingerprintError = errDetection.Error()
@@ -127,10 +128,6 @@ func Scan(pctx context.Context, r *Runner, headers map[string]interface{},
 				gologger.Error().Msg(errExploit.Error())
 			}
 		}
-	}
-
-	if len(resultData.ExploitURLs) == 0 {
-		resultData.References = exploit.GetReferences(resDetection)
 	}
 
 	return resultData, nil
