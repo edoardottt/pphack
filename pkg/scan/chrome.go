@@ -8,9 +8,14 @@ package scan
 
 import (
 	"context"
+	"fmt"
+	"strings"
+	"time"
 
 	"github.com/chromedp/cdproto/network"
 	"github.com/chromedp/chromedp"
+	"github.com/edoardottt/pphack/pkg/exploit"
+	"github.com/edoardottt/pphack/pkg/output"
 	"github.com/projectdiscovery/gologger"
 )
 
@@ -44,22 +49,86 @@ func GetChromeBrowser(copts []func(*chromedp.ExecAllocator)) (context.CancelFunc
 	return ecancel, pctx, pcancel
 }
 
-func Scan(ctx context.Context, headers map[string]interface{}, js, targetURL string) (string, error) {
-	var res string
+// Scan is the actual function that takes as input a browser context, other info
+// and performs the scan.
+func Scan(pctx context.Context, r *Runner, headers map[string]interface{},
+	js, value, targetURL string) (output.ResultData, error) {
+	var (
+		resScan                string
+		resDetection           []string
+		chromedpTasksScan      chromedp.Tasks
+		chromedpTasksDetection chromedp.Tasks
+	)
 
-	var err error
-	if headers != nil {
-		err = chromedp.Run(ctx, chromedp.Tasks{
-			network.SetExtraHTTPHeaders(network.Headers(headers)),
-			chromedp.Navigate(targetURL),
-			chromedp.EvaluateAsDevTools(js, &res)},
-		)
-	} else {
-		err = chromedp.Run(ctx, chromedp.Tasks{
-			chromedp.Navigate(targetURL),
-			chromedp.EvaluateAsDevTools(js, &res)},
-		)
+	resultData := output.ResultData{
+		TargetURL: value,
+		ScanURL:   targetURL,
 	}
 
-	return res, err
+	if headers != nil {
+		chromedpTasksScan = append(chromedpTasksScan, network.SetExtraHTTPHeaders(network.Headers(headers)))
+	}
+
+	chromedpTasksScan = append(
+		chromedpTasksScan, chromedp.Navigate(targetURL),
+		chromedp.EvaluateAsDevTools(js, &resScan),
+	)
+
+	ctx, cancel := context.WithTimeout(pctx, time.Second*time.Duration(r.Options.Timeout))
+	ctx, _ = chromedp.NewContext(ctx)
+	defer cancel()
+
+	errScan := chromedp.Run(ctx, chromedpTasksScan)
+
+	if errScan != nil {
+		resultData.ScanError = errScan.Error()
+	}
+
+	resultData.JSEvaluation = strings.TrimSpace(resScan)
+
+	// if I have to detect the exploit, no errors and it's vulnerable.
+	if r.Options.Exploit && errScan == nil {
+		if resTrimmed := strings.TrimSpace(resScan); resTrimmed != "" {
+			if r.Options.Verbose {
+				gologger.Info().Label("VULN").Msg(fmt.Sprintf("Target is Vulnerable %s", targetURL))
+			}
+
+			chromedpTasksScan = append(chromedpTasksScan, chromedp.EvaluateAsDevTools(exploit.Fingerprint, &resDetection))
+
+			errDetection := chromedp.Run(ctx, chromedpTasksScan)
+			if errDetection != nil && r.Options.Verbose {
+				gologger.Error().Msg(errDetection.Error())
+			}
+
+			resultData.Fingerprint = resDetection
+			resultData.References = exploit.GetReferences(resDetection)
+
+			if errDetection != nil {
+				resultData.FingerprintError = errDetection.Error()
+			}
+
+			if headers != nil {
+				chromedpTasksDetection = append(chromedpTasksDetection, network.SetExtraHTTPHeaders(network.Headers(headers)))
+			}
+
+			if r.Options.Verbose {
+				gologger.Info().Msg(fmt.Sprintf("Trying to exploit %s", value))
+			}
+
+			result, errExploit := exploit.CheckExploit(pctx, chromedpTasksDetection, resDetection, targetURL,
+				r.Options.Verbose, r.Options.Timeout)
+
+			resultData.ExploitURLs = result
+
+			if errExploit != nil {
+				resultData.ExploitError = errDetection.Error()
+			}
+
+			if errExploit != nil && !r.Options.Verbose {
+				gologger.Error().Msg(errExploit.Error())
+			}
+		}
+	}
+
+	return resultData, nil
 }

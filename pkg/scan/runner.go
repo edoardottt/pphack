@@ -8,14 +8,11 @@ package scan
 
 import (
 	"bufio"
-	"context"
 	"fmt"
 	"os"
 	"strings"
 	"sync"
-	"time"
 
-	"github.com/chromedp/chromedp"
 	"github.com/edoardottt/golazy"
 	"github.com/edoardottt/pphack/pkg/input"
 	"github.com/edoardottt/pphack/pkg/output"
@@ -109,29 +106,24 @@ func (r *Runner) Run() {
 		go func() {
 			for value := range r.InputChan {
 				targetURL, err := PrepareURL(value, testPayload)
-				if err != nil {
-					verboseOutput(r, value, err)
+				if err != nil && !r.Options.Silent {
+					gologger.Error().Msg(fmt.Sprintf("%s: %s", value, err.Error()))
 				}
-
-				ctx, cancel := context.WithTimeout(pctx, time.Second*time.Duration(r.Options.Timeout))
-				ctx, _ = chromedp.NewContext(ctx)
 
 				rl.Take()
 
-				res, err := Scan(ctx, headers, js, targetURL)
-				if err != nil {
-					verboseOutput(r, targetURL, err)
+				if r.Options.Verbose {
+					gologger.Info().Msg(fmt.Sprintf("Targeting %s", value))
 				}
 
-				if resTrimmed := strings.TrimSpace(res); resTrimmed != "" {
-					if err != nil {
-						writeOutput(r, targetURL, res, err.Error())
-					} else {
-						writeOutput(r, targetURL, res, "")
-					}
+				resultData, err := Scan(pctx, r, headers, js, value, targetURL)
+				if err != nil && !r.Options.Silent {
+					gologger.Error().Msg(err.Error())
 				}
 
-				cancel()
+				if resTrimmed := strings.TrimSpace(resultData.JSEvaluation); resTrimmed != "" {
+					writeOutput(r, resultData)
+				}
 			}
 
 			wg.Done()
@@ -143,13 +135,13 @@ func (r *Runner) Run() {
 	wg.Wait()
 }
 
-func writeOutput(r *Runner, url, jsEval, err string) {
-	if !r.Result.Printed(url) {
-		write(r.OutMutex, &r.Options, url, jsEval, err)
+func writeOutput(r *Runner, resultData output.ResultData) {
+	if !r.Result.Printed(resultData.TargetURL) {
+		write(r.OutMutex, &r.Options, resultData)
 	}
 }
 
-func write(m *sync.Mutex, options *input.Options, u, jse, e string) {
+func write(m *sync.Mutex, options *input.Options, resultData output.ResultData) {
 	if options.FileOutput != "" && options.Output == nil {
 		file, err := os.OpenFile(options.FileOutput, os.O_CREATE|os.O_RDWR|os.O_APPEND, 0644)
 		if err != nil {
@@ -165,38 +157,47 @@ func write(m *sync.Mutex, options *input.Options, u, jse, e string) {
 	)
 
 	if options.JSON {
-		o, err = output.FormatJSON(u, jse, e)
+		o, err = output.FormatJSON(&resultData)
 		if err != nil {
 			gologger.Fatal().Msg(err.Error())
 		}
+
+		fmt.Println(string(o))
 	} else {
-		o = []byte(u)
+		if options.Exploit {
+			if len(resultData.ExploitURLs) != 0 {
+				var str string
+				for _, e := range resultData.ExploitURLs {
+					str += fmt.Sprintf("[EXPLOIT] %s\n", e)
+					gologger.Info().Label("EXPLOIT").Msg(e)
+				}
+
+				o = []byte(strings.TrimSuffix(str, "\n"))
+			} else {
+				gologger.Info().Label("VULN").Msg(resultData.ScanURL)
+
+				str := fmt.Sprintf("[VULN] %s\n", resultData.ScanURL)
+				for _, e := range resultData.References {
+					str += fmt.Sprintf("[REFERENCE] Target is vulnerable but cannot reproduce an exploit, see %s\n", e)
+					gologger.Info().Label("REFERENCE").Msg(
+						fmt.Sprintf("Target is vulnerable but cannot reproduce an exploit, see %s", e))
+				}
+
+				o = []byte(strings.TrimSuffix(str, "\n"))
+			}
+		} else {
+			gologger.Info().Label("VULN").Msg(resultData.ScanURL)
+			o = []byte(fmt.Sprintf("[VULN] %s", resultData.ScanURL))
+		}
 	}
 
 	m.Lock()
 
 	if options.Output != nil {
 		if _, err := options.Output.Write([]byte(string(o) + "\n")); err != nil && options.Verbose {
-			gologger.Fatal().Msg(err.Error())
+			gologger.Error().Msg(err.Error())
 		}
 	}
 
 	m.Unlock()
-
-	fmt.Println(string(o))
-}
-
-func verboseOutput(r *Runner, value string, err error) {
-	if r.Options.Verbose {
-		if r.Options.JSON {
-			o, err := output.FormatJSON(value, "", err.Error())
-			if err != nil {
-				gologger.Error().Msg(err.Error())
-			}
-
-			fmt.Println(string(o))
-		} else {
-			gologger.Error().Msg(err.Error())
-		}
-	}
 }

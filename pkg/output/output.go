@@ -7,7 +7,10 @@ This repository is under MIT License https://github.com/edoardottt/pphack/blob/m
 package output
 
 import (
+	"fmt"
 	"sync"
+
+	"github.com/projectdiscovery/gologger"
 )
 
 // Result is the struct handling the output.
@@ -39,4 +42,14 @@ func (o *Result) Printed(result string) bool {
 	}
 
 	return true
+}
+
+// JSONOutput checks and prints JSON output.
+func JSONOutput(json *ResultData) {
+	o, err := FormatJSON(json)
+	if err != nil {
+		gologger.Error().Msg(err.Error())
+	} else {
+		fmt.Println(string(o))
+	}
 }

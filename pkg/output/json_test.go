@@ -7,52 +7,80 @@ This repository is under MIT License https://github.com/edoardottt/pphack/blob/m
 package output_test
 
 import (
-	"reflect"
 	"testing"
 
 	"github.com/edoardottt/pphack/pkg/output"
+	"github.com/stretchr/testify/require"
 )
 
 func TestFormatJSON(t *testing.T) {
 	tests := []struct {
 		name  string
-		input output.JSONData
+		input output.ResultData
 		want  string
 	}{
 		{name: "no error",
-			input: output.JSONData{
-				URL: "https://edoardottt.github.io/pp-test?constructor.prototype.oigczu=oigczu\u0026__proto__[oigczu]=" +
-					"oigczu\u0026constructor[prototype][oigczu]=oigczu\u0026__proto__.oigczu=oigczu\u0026__proto__." +
-					"oigczu=1|2|3\u0026__proto__[oigczu]={\"json\":\"value\"}#__proto__[oigczu]=oigczu",
+			input: output.ResultData{
+				TargetURL: "https://edoardottt.github.io/pp-test",
+				ScanURL: "https://edoardottt.github.io/pp-test?constructor.prototype.oigczu=oigczu" +
+					"&__proto__[oigczu]=oigczu&constructor[prototype][oigczu]=oigczu&__proto__.oigczu=oigczu" +
+					"&__proto__.oigczu=1|2|3&__proto__[oigczu]={\"json\":\"value\"}#__proto__[oigczu]=oigczu",
 				JSEvaluation: "oigczu",
-				Error:        "",
+				ScanError:    "",
 			},
-			want: `{"URL":"https://edoardottt.github.io/pp-test?constructor.prototype.oigczu=oigczu\u0026__proto__` +
-				`[oigczu]=oigczu\u0026constructor[prototype][oigczu]=oigczu\u0026__proto__.oigczu=oigczu\u0026__proto__.` +
-				`oigczu=1|2|3\u0026__proto__[oigczu]={\"json\":\"value\"}#__proto__[oigczu]=oigczu","JSEvaluation":"oigczu"}`,
+			want: `{"TargetURL":"https://edoardottt.github.io/pp-test",` +
+				`"ScanURL":"https://edoardottt.github.io/pp-test?constructor.prototype.oigczu=oigczu&__proto__` +
+				`[oigczu]=oigczu&constructor[prototype][oigczu]=oigczu&__proto__.oigczu=oigczu&__proto__.` +
+				`oigczu=1|2|3&__proto__[oigczu]={\"json\":\"value\"}#__proto__[oigczu]=oigczu",` +
+				`"JSEvaluation":"oigczu"}`,
 		},
 		{name: "error",
-			input: output.JSONData{
-				URL: "https://edoardottt.github.io/pp-tes?constructor.prototype.sqtiwx=sqtiwx\u0026__proto__[sqtiwx]" +
-					"=sqtiwx\u0026constructor[prototype][sqtiwx]=sqtiwx\u0026__proto__.sqtiwx=sqtiwx\u0026__proto__." +
-					"sqtiwx=1|2|3\u0026__proto__[sqtiwx]={\"json\":\"value\"}#__proto__[sqtiwx]=sqtiwx",
+			input: output.ResultData{
+				TargetURL: "https://edoardottt.github.io/pp-tes",
+				ScanURL: "https://edoardottt.github.io/pp-tes?constructor.prototype.sqtiwx=sqtiwx" +
+					"&__proto__[sqtiwx]=sqtiwx&constructor[prototype][sqtiwx]=sqtiwx&__proto__.sqtiwx=sqtiwx" +
+					"&__proto__.sqtiwx=1|2|3&__proto__[sqtiwx]={\"json\":\"value\"}#__proto__[sqtiwx]=sqtiwx",
 				JSEvaluation: "",
-				Error:        "encountered an undefined value",
+				ScanError:    "encountered an undefined value",
 			},
-			want: `{"URL":"https://edoardottt.github.io/pp-tes?constructor.prototype.sqtiwx=sqtiwx\u0026__proto__[sqtiwx]` +
-				`=sqtiwx\u0026constructor[prototype][sqtiwx]=sqtiwx\u0026__proto__.sqtiwx=sqtiwx\u0026__proto__.` +
-				`sqtiwx=1|2|3\u0026__proto__[sqtiwx]={\"json\":\"value\"}#__proto__[sqtiwx]=` +
-				`sqtiwx","Error":"encountered an undefined value"}`,
+			want: `{"TargetURL":"https://edoardottt.github.io/pp-tes",` +
+				`"ScanURL":"https://edoardottt.github.io/pp-tes?constructor.prototype.sqtiwx=sqtiwx&__proto__[sqtiwx]` +
+				`=sqtiwx&constructor[prototype][sqtiwx]=sqtiwx&__proto__.sqtiwx=sqtiwx&__proto__.` +
+				`sqtiwx=1|2|3&__proto__[sqtiwx]={\"json\":\"value\"}#__proto__[sqtiwx]=` +
+				`sqtiwx","ScanError":"encountered an undefined value"}`,
+		},
+		{name: "exploit",
+			input: output.ResultData{
+				TargetURL: "https://edoardottt.github.io/pp-test",
+				ScanURL: "https://edoardottt.github.io/pp-test?constructor.prototype.lfhfqn=lfhfqn" +
+					"&__proto__[lfhfqn]=lfhfqn&constructor[prototype][lfhfqn]=lfhfqn&__proto__.lfhfqn=lfhfqn" +
+					"&__proto__.lfhfqn=1|2|3&__proto__[lfhfqn]={\"json\":\"value\"}#__proto__[lfhfqn]=lfhfqn",
+				JSEvaluation: "lfhfqn",
+				Fingerprint:  []string{"jQuery"},
+				ExploitURLs: []string{"https://edoardottt.github.io/pp-test/?__proto__[url][]=data:,alert(1337)//" +
+					"&__proto__[dataType]=script",
+					"https://edoardottt.github.io/pp-test/?__proto__[context]=%3Cimg/src/onerror%3dalert(1337)" +
+						"%3E&__proto__[jquery]=x"},
+				ScanError:  "",
+				References: []string{"https://github.com/BlackFan/client-side-prototype-pollution/blob/master/gadgets/jquery.md"},
+			},
+			want: `{"TargetURL":"https://edoardottt.github.io/pp-test",` +
+				`"ScanURL":"https://edoardottt.github.io/pp-test?constructor.prototype.lfhfqn=lfhfqn` +
+				`&__proto__[lfhfqn]=lfhfqn&constructor[prototype][lfhfqn]=lfhfqn&__proto__.lfhfqn=lfhfqn` +
+				`&__proto__.lfhfqn=1|2|3&__proto__[lfhfqn]={\"json\":\"value\"}#__proto__[lfhfqn]=lfhfqn",` +
+				`"JSEvaluation":"lfhfqn",` +
+				`"Fingerprint":["jQuery"],` +
+				`"ExploitURLs":["https://edoardottt.github.io/pp-test/?__proto__[url][]=data:,alert(1337)//` +
+				`&__proto__[dataType]=script","https://edoardottt.github.io/pp-test/?__proto__[context]=` +
+				`%3Cimg/src/onerror%3dalert(1337)%3E&__proto__[jquery]=x"],` +
+				`"References":["https://github.com/BlackFan/client-side-prototype-pollution/blob/master/gadgets/jquery.md"]}`,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, _ := output.FormatJSON(tt.input.URL, tt.input.JSEvaluation, tt.input.Error)
-			if !reflect.DeepEqual(string(got), tt.want) {
-				t.Errorf("GetJSONString\n%v", string(got))
-				t.Errorf("want\n%v", tt.want)
-			}
+			got, _ := output.FormatJSON(&tt.input)
+			require.JSONEq(t, string(got), tt.want)
 		})
 	}
 }
