@@ -5,9 +5,10 @@ go 1.23
 require (
 	github.com/chromedp/chromedp v0.12.1
 	github.com/edoardottt/golazy v0.1.4
-	github.com/projectdiscovery/goflags v0.1.70
-	github.com/projectdiscovery/gologger v1.1.43
-	github.com/projectdiscovery/utils v0.4.9
+	github.com/projectdiscovery/goflags v0.1.71
+	github.com/projectdiscovery/gologger v1.1.44
+	github.com/projectdiscovery/utils v0.4.10
+	github.com/stretchr/testify v1.10.0
 	go.uber.org/ratelimit v0.3.1
 )
 
@@ -16,9 +17,10 @@ require (
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/benbjohnson/clock v1.3.5 // indirect
-	github.com/chromedp/cdproto v0.0.0-20250120090109-d38428e4d9c8
+	github.com/chromedp/cdproto v0.0.0-20250208210249-fa305b1d5b8a
 	github.com/chromedp/sysutil v1.1.0 // indirect
 	github.com/cnf/structhash v0.0.0-20201127153200-e1b16c1ebc08 // indirect
+	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dsnet/compress v0.0.2-0.20210315054119-f66993602bf5 // indirect
 	github.com/gobwas/httphead v0.1.0 // indirect
 	github.com/gobwas/pool v0.2.1 // indirect
@@ -41,6 +43,7 @@ require (
 	github.com/nwaples/rardecode v1.1.3 // indirect
 	github.com/pierrec/lz4/v4 v4.1.22 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/projectdiscovery/blackrock v0.0.1 // indirect
 	github.com/saintfish/chardet v0.0.0-20230101081208-5e3ef4b5456d // indirect
 	github.com/tidwall/gjson v1.18.0 // indirect
@@ -48,11 +51,11 @@ require (
 	github.com/tidwall/pretty v1.2.1 // indirect
 	github.com/ulikunitz/xz v0.5.12 // indirect
 	github.com/xi2/xz v0.0.0-20171230120015-48954b6210f8 // indirect
-	golang.org/x/exp v0.0.0-20250106191152-7588d65b2ba8 // indirect
-	golang.org/x/mod v0.22.0 // indirect
+	golang.org/x/exp v0.0.0-20250207012021-f9890c6ad9f3 // indirect
+	golang.org/x/mod v0.23.0 // indirect
 	golang.org/x/net v0.34.0 // indirect
-	golang.org/x/sync v0.10.0 // indirect
-	golang.org/x/sys v0.29.0 // indirect
+	golang.org/x/sync v0.11.0 // indirect
+	golang.org/x/sys v0.30.0 // indirect
 	golang.org/x/tools v0.29.0 // indirect
 	gopkg.in/djherbis/times.v1 v1.3.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect

@@ -20,7 +20,7 @@ var (
 	ErrNoInput          = errors.New("no input specified")
 	ErrNegativeValue    = errors.New("must be positive")
 	ErrMalformedURL     = errors.New("malformed input URL")
-	ErrMalformedPayload = errors.New("malformed input payload (follow javascript variables naming rules)")
+	ErrMalformedPayload = errors.New("malformed input payload (follow JavaScript variables naming rules)")
 )
 
 func (options *Options) validateOptions() error {

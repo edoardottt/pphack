@@ -6,27 +6,46 @@ This repository is under MIT License https://github.com/edoardottt/pphack/blob/m
 
 package output
 
-import "encoding/json"
+import (
+	"bytes"
+	"encoding/json"
+)
 
-// JSONData.
-type JSONData struct {
-	URL          string `json:"URL,omitempty"`
+// JSONData struct holds the JSON output data.
+type ResultData struct {
+	// TargetURL is the original target URL.
+	TargetURL string `json:"TargetURL,omitempty"`
+	// ScanURL is the target URL + payload used for prototype pollution scan.
+	ScanURL string `json:"ScanURL,omitempty"`
+	// JSEvaluation is the JS result after prototype pollution scan
+	// in the browser console.
 	JSEvaluation string `json:"JSEvaluation,omitempty"`
-	Error        string `json:"Error,omitempty"`
+	// ScanError is the error after prototype pollution scan (if present).
+	ScanError string `json:"ScanError,omitempty"`
+	// Fingerprint is the JS result after fingerprint scan
+	// in the browser console.
+	Fingerprint []string `json:"Fingerprint,omitempty"`
+	// FingerprintError is the error after fingerprint scan (if present).
+	FingerprintError string `json:"FingerprintError,omitempty"`
+	// ExploitURLs are the URLs crafted to exploit the target URL (if present).
+	ExploitURLs []string `json:"ExploitURLs,omitempty"`
+	// ExploitError is the error after exploit scan (if present).
+	ExploitError string `json:"ExploitError,omitempty"`
+	// References are the links to read more on the vulnerable target exploitation.
+	References []string `json:"References,omitempty"`
 }
 
 // FormatJSON returns the input as JSON string.
-func FormatJSON(url, jsEval, e string) ([]byte, error) {
-	input := &JSONData{
-		URL:          url,
-		JSEvaluation: jsEval,
-		Error:        e,
-	}
+func FormatJSON(input *ResultData) ([]byte, error) {
+	var jsonOutput bytes.Buffer
 
-	jsonOutput, err := json.Marshal(input)
+	enc := json.NewEncoder(&jsonOutput)
+	enc.SetEscapeHTML(false)
+
+	err := enc.Encode(input)
 	if err != nil {
 		return nil, err
 	}
 
-	return jsonOutput, nil
+	return jsonOutput.Bytes(), nil
 }

@@ -61,7 +61,7 @@ INPUT:
 
 CONFIGURATION:
    -c, -concurrency int       Concurrency level (default 50)
-   -t, -timeout int           Connection timeout in seconds (default 10)
+   -t, -timeout int           Connection timeout in seconds (default 20)
    -px, -proxy string         Set a proxy server (URL)
    -rl, -rate-limit int       Set a rate limit (per second)
    -ua, -user-agent string    Set a custom User Agent (random by default)
@@ -72,6 +72,7 @@ SCAN:
    -p, -payload string            Custom payload
    -js, -javascript string        Run custom Javascript on target
    -jsf, -javascript-file string  File containing custom Javascript to run on target
+   -e, -exploit                   Automatic Exploitation
 
 OUTPUT:
    -o, -output string  File to write output results
@@ -103,6 +104,12 @@ pphack -l targets.txt
 cat targets.txt | pphack
 ```
 
+Automatic exploitation
+
+```console
+pphack -e -u https://edoardottt.github.io/pp-test/
+```
+
 [Read the Wiki](https://github.com/edoardottt/pphack/wiki) to understand how to use pphack.
 
 Changelog 📌
@@ -117,7 +124,7 @@ Just open an [issue](https://github.com/edoardottt/pphack/issues) / [pull reques
 
 Before opening a pull request, download [golangci-lint](https://golangci-lint.run/usage/install/) and run
 
-```bash
+```console
 golangci-lint run
 ```
 
