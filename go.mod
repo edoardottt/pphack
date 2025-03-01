@@ -3,21 +3,23 @@ module github.com/edoardottt/pphack
 go 1.23
 
 require (
-	github.com/chromedp/chromedp v0.12.1
+	github.com/chromedp/chromedp v0.13.0
 	github.com/edoardottt/golazy v0.1.4
-	github.com/projectdiscovery/goflags v0.1.72
-	github.com/projectdiscovery/gologger v1.1.45
-	github.com/projectdiscovery/utils v0.4.11
+	github.com/projectdiscovery/goflags v0.1.74
+	github.com/projectdiscovery/gologger v1.1.46
+	github.com/projectdiscovery/utils v0.4.12
 	github.com/stretchr/testify v1.10.0
 	go.uber.org/ratelimit v0.3.1
 )
+
+require github.com/go-json-experiment/json v0.0.0-20250211171154-1ae217ad3535 // indirect
 
 require (
 	github.com/andybalholm/brotli v1.1.1 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/benbjohnson/clock v1.3.5 // indirect
-	github.com/chromedp/cdproto v0.0.0-20250208210249-fa305b1d5b8a
+	github.com/chromedp/cdproto v0.0.0-20250222051814-50c6cb17f10a
 	github.com/chromedp/sysutil v1.1.0 // indirect
 	github.com/cnf/structhash v0.0.0-20201127153200-e1b16c1ebc08 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
@@ -28,12 +30,10 @@ require (
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/shlex v0.0.0-20191202100458-e7afc7fbc510 // indirect
 	github.com/gorilla/css v1.0.1 // indirect
-	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/compress v1.17.11 // indirect
 	github.com/klauspost/pgzip v1.2.6 // indirect
 	github.com/logrusorgru/aurora v2.0.3+incompatible // indirect
-	github.com/mailru/easyjson v0.9.0 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mholt/archiver/v3 v3.5.1 // indirect
 	github.com/microcosm-cc/bluemonday v1.0.27 // indirect
