@@ -1,6 +1,9 @@
 module github.com/edoardottt/pphack
 
-go 1.23
+go 1.23.0
+
+toolchain go1.23.2
+
 require (
 	github.com/chromedp/chromedp v0.13.1
 	github.com/edoardottt/golazy v0.1.4
