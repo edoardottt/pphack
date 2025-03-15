@@ -130,6 +130,11 @@ golangci-lint run
 
 If there aren't errors, go ahead :)
 
+In the news 📰
+-------
+
+- [tl;dr sec Newsletter](https://tldrsec.com/p/tldr-sec-269)
+
 License 📝
 -------
 
