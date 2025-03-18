@@ -2,14 +2,12 @@ module github.com/edoardottt/pphack
 
 go 1.23.0
 
-toolchain go1.23.2
-
 require (
 	github.com/chromedp/chromedp v0.13.1
 	github.com/edoardottt/golazy v0.1.4
 	github.com/projectdiscovery/goflags v0.1.74
-	github.com/projectdiscovery/gologger v1.1.48
-	github.com/projectdiscovery/utils v0.4.14
+	github.com/projectdiscovery/gologger v1.1.49
+	github.com/projectdiscovery/utils v0.4.15
 	github.com/stretchr/testify v1.10.0
 	go.uber.org/ratelimit v0.3.1
 )
