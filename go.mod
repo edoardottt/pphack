@@ -6,15 +6,14 @@ require (
 	github.com/chromedp/chromedp v0.13.3
 	github.com/edoardottt/golazy v0.1.4
 	github.com/projectdiscovery/goflags v0.1.74
-	github.com/projectdiscovery/gologger v1.1.50
 	github.com/projectdiscovery/utils v0.4.16
+	github.com/projectdiscovery/gologger v1.1.51
 	github.com/stretchr/testify v1.10.0
 	go.uber.org/ratelimit v0.3.1
 )
 
-require github.com/go-json-experiment/json v0.0.0-20250211171154-1ae217ad3535 // indirect
-
 require (
+  github.com/go-json-experiment/json v0.0.0-20250211171154-1ae217ad3535 // indirect
 	github.com/andybalholm/brotli v1.1.1 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
