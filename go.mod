@@ -26,9 +26,6 @@ require (
 	github.com/therootcompany/xz v1.0.1 // indirect
 	go4.org v0.0.0-20230225012048-214862532bf5 // indirect
 	golang.org/x/text v0.23.0 // indirect
-)
-
-require (
 	github.com/andybalholm/brotli v1.1.1 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
