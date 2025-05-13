@@ -44,12 +44,13 @@ func (o *Result) Printed(result string) bool {
 	return true
 }
 
-// JSONOutput checks and prints JSON output.
+// JSONOutput marshals and prints the JSON output.
 func JSONOutput(json *ResultData) {
-	o, err := FormatJSON(json)
+	data, err := FormatJSON(json)
 	if err != nil {
 		gologger.Error().Msg(err.Error())
-	} else {
-		fmt.Println(string(o))
+		return
 	}
+
+	fmt.Println(string(data))
 }
