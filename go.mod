@@ -1,13 +1,13 @@
 module github.com/edoardottt/pphack
 
-go 1.23.0
+go 1.24.0
 
 require (
 	github.com/chromedp/chromedp v0.13.6
 	github.com/edoardottt/golazy v0.1.4
 	github.com/projectdiscovery/goflags v0.1.74
 	github.com/projectdiscovery/gologger v1.1.54
-	github.com/projectdiscovery/utils v0.4.20
+	github.com/projectdiscovery/utils v0.4.21
 	github.com/stretchr/testify v1.10.0
 	go.uber.org/ratelimit v0.3.1
 )
@@ -24,7 +24,7 @@ require (
 	github.com/chromedp/cdproto v0.0.0-20250403032234-65de8f5d025b
 	github.com/chromedp/sysutil v1.1.0 // indirect
 	github.com/cnf/structhash v0.0.0-20201127153200-e1b16c1ebc08 // indirect
-	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/dsnet/compress v0.0.2-0.20230904184137-39efe44ab707 // indirect
 	github.com/go-json-experiment/json v0.0.0-20250211171154-1ae217ad3535 // indirect
 	github.com/gobwas/httphead v0.1.0 // indirect
@@ -48,7 +48,7 @@ require (
 	github.com/nwaples/rardecode/v2 v2.0.0-beta.4.0.20241112120701-034e449c6e78 // indirect
 	github.com/pierrec/lz4/v4 v4.1.22 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
-	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/projectdiscovery/blackrock v0.0.1 // indirect
 	github.com/saintfish/chardet v0.0.0-20230101081208-5e3ef4b5456d // indirect
 	github.com/sorairolake/lzip-go v0.3.5 // indirect
