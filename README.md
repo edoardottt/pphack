@@ -87,11 +87,11 @@ Examples 💡
 Scan a single URL
 
 ```console
-pphack -u https://edoardottt.github.io/pp-test/
+pphack -u https://edoardottt.github.io/pphack-test/
 ```
 
 ```console
-echo https://edoardottt.github.io/pp-test/ | pphack
+echo https://edoardottt.github.io/pphack-test/ | pphack
 ```
 
 Scan a list of URLs
@@ -107,7 +107,7 @@ cat targets.txt | pphack
 Automatic exploitation
 
 ```console
-pphack -e -u https://edoardottt.github.io/pp-test/
+pphack -e -u https://edoardottt.github.io/pphack-test/
 ```
 
 [Read the Wiki](https://github.com/edoardottt/pphack/wiki) to understand how to use pphack.
