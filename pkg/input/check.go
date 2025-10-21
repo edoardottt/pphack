@@ -60,7 +60,7 @@ func payloadOk(payload string) bool {
 		return true
 	}
 
-	if !(payload[0] == '_' || payload[0] == '$' || isLetter(payload[0])) {
+	if payload[0] != '_' && payload[0] != '$' && !isLetter(payload[0]) {
 		return false
 	}
 

@@ -76,10 +76,10 @@ func Scan(pctx context.Context, r *Runner, headers map[string]interface{},
 
 	ctx, cancel := context.WithTimeout(pctx, time.Second*time.Duration(r.Options.Timeout))
 	ctx, _ = chromedp.NewContext(ctx)
+
 	defer cancel()
 
 	errScan := chromedp.Run(ctx, chromedpTasksScan)
-
 	if errScan != nil {
 		resultData.ScanError = errScan.Error()
 	}

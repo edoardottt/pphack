@@ -21,6 +21,7 @@ const (
 	DefaultTimeout     = 20
 	DefaultConcurrency = 50
 	DefaultRateLimit   = 0
+	MinimumArgFlags    = 2
 )
 
 // Options struct holds all the configuration settings.
@@ -131,5 +132,5 @@ func help() bool {
 
 func noArgs() bool {
 	// User passed no flag.
-	return len(os.Args) < 2
+	return len(os.Args) < MinimumArgFlags
 }

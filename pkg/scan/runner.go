@@ -20,6 +20,10 @@ import (
 	fileutil "github.com/projectdiscovery/utils/file"
 )
 
+const (
+	DefaultFilePerm = 0644
+)
+
 type Runner struct {
 	InputChan chan string
 	Result    output.Result
@@ -143,7 +147,7 @@ func writeOutput(r *Runner, resultData output.ResultData) {
 
 func write(m *sync.Mutex, options *input.Options, resultData output.ResultData) {
 	if options.FileOutput != "" && options.Output == nil {
-		file, err := os.OpenFile(options.FileOutput, os.O_CREATE|os.O_RDWR|os.O_APPEND, 0644)
+		file, err := os.OpenFile(options.FileOutput, os.O_CREATE|os.O_RDWR|os.O_APPEND, DefaultFilePerm)
 		if err != nil {
 			gologger.Fatal().Msg(err.Error())
 		}
