@@ -30,6 +30,7 @@ func New() Result {
 // Printed checks if a string was already printed.
 func (o *Result) Printed(result string) bool {
 	o.Mutex.RLock()
+
 	if _, ok := o.Map[result]; !ok {
 		o.Mutex.RUnlock()
 		o.Mutex.Lock()
