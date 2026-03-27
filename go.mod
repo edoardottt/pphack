@@ -1,6 +1,6 @@
 module github.com/edoardottt/pphack
 
-go 1.24.0
+go 1.25.0
 
 require (
 	github.com/chromedp/chromedp v0.14.2
@@ -18,9 +18,6 @@ require (
 	github.com/mikelolasagasti/xz v1.0.1 // indirect
 	github.com/minio/minlz v1.0.1 // indirect
 	github.com/spf13/afero v1.15.0 // indirect
-)
-
-require (
 	github.com/STARRY-S/zip v0.2.3 // indirect
 	github.com/andybalholm/brotli v1.2.0 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 // indirect
