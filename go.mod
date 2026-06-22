@@ -12,9 +12,8 @@ require (
 	go.uber.org/ratelimit v0.3.1
 )
 
-require github.com/google/go-cmp v0.7.0 // indirect
-
 require (
+	github.com/google/go-cmp v0.7.0 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/benbjohnson/clock v1.3.5 // indirect
