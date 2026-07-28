@@ -5,11 +5,23 @@ go 1.26
 require (
 	github.com/chromedp/chromedp v0.16.0
 	github.com/edoardottt/golazy v0.1.4
-	github.com/projectdiscovery/goflags v0.1.74
+	github.com/projectdiscovery/goflags v0.1.75
 	github.com/projectdiscovery/gologger v1.1.71
 	github.com/projectdiscovery/utils v0.11.1
 	github.com/stretchr/testify v1.11.1
 	go.uber.org/ratelimit v0.3.1
+)
+
+require (
+	github.com/ebitengine/purego v0.10.0 // indirect
+	github.com/go-ole/go-ole v1.2.6 // indirect
+	github.com/lufia/plan9stats v0.0.0-20211012122336-39d0f177ccd0 // indirect
+	github.com/power-devops/perfstat v0.0.0-20240221224432-82ca36839d55 // indirect
+	github.com/shirou/gopsutil/v4 v4.26.3 // indirect
+	github.com/tklauser/go-sysconf v0.3.16 // indirect
+	github.com/tklauser/numcpus v0.11.0 // indirect
+	github.com/yusufpapurcu/wmi v1.2.4 // indirect
+	golang.org/x/term v0.43.0 // indirect
 )
 
 require (
@@ -25,7 +37,6 @@ require (
 	github.com/gobwas/httphead v0.1.0 // indirect
 	github.com/gobwas/pool v0.2.1 // indirect
 	github.com/gobwas/ws v1.4.0 // indirect
-	github.com/google/go-cmp v0.7.0 // indirect
 	github.com/google/shlex v0.0.0-20191202100458-e7afc7fbc510 // indirect
 	github.com/gorilla/css v1.0.1 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
