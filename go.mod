@@ -5,7 +5,7 @@ go 1.26
 require (
 	github.com/chromedp/chromedp v0.16.0
 	github.com/edoardottt/golazy v0.1.4
-	github.com/projectdiscovery/goflags v0.1.75
+	github.com/projectdiscovery/goflags v0.1.76
 	github.com/projectdiscovery/gologger v1.1.72
 	github.com/projectdiscovery/utils v0.11.1
 	github.com/stretchr/testify v1.11.1
