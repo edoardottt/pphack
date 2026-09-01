@@ -8,7 +8,7 @@ require (
 	github.com/projectdiscovery/goflags v0.1.75
 	github.com/projectdiscovery/gologger v1.1.72
 	github.com/projectdiscovery/utils v0.11.2
-	github.com/stretchr/testify v1.11.1
+	github.com/stretchr/testify v1.12.1
 	go.uber.org/ratelimit v0.3.1
 )
 
@@ -21,6 +21,7 @@ require (
 	github.com/tklauser/go-sysconf v0.3.16 // indirect
 	github.com/tklauser/numcpus v0.11.0 // indirect
 	github.com/yusufpapurcu/wmi v1.2.4 // indirect
+	go.yaml.in/yaml/v3 v3.0.5 // indirect
 	golang.org/x/term v0.43.0 // indirect
 )
 
@@ -31,7 +32,6 @@ require (
 	github.com/chromedp/cdproto v0.0.0-20260714215040-dc233986426f
 	github.com/chromedp/sysutil v1.1.0 // indirect
 	github.com/cnf/structhash v0.0.0-20250313080605-df4c6cc74a9a // indirect
-	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/djherbis/times v1.6.0 // indirect
 	github.com/go-json-experiment/json v0.0.0-20260623181947-01eb4420fa68 // indirect
 	github.com/gobwas/httphead v0.1.0 // indirect
@@ -46,7 +46,6 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
-	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/projectdiscovery/blackrock v0.0.2 // indirect
 	github.com/saintfish/chardet v0.0.0-20230101081208-5e3ef4b5456d // indirect
 	github.com/tidwall/gjson v1.18.0 // indirect
