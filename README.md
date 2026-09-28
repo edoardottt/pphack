@@ -2,21 +2,12 @@
   pphack
   <br>
 </h1>
-
 <h4 align="center">Advanced Client-Side Prototype Pollution Scanner</h4>
-
 <h6 align="center"> Coded with 💙 by edoardottt </h6>
-
 <p align="center">
-
   <a href="https://github.com/edoardottt/pphack/actions">
       <img src="https://github.com/edoardottt/pphack/actions/workflows/go.yml/badge.svg" alt="go action">
   </a>
-
-  <a href="https://goreportcard.com/report/github.com/edoardottt/pphack">
-      <img src="https://goreportcard.com/badge/github.com/edoardottt/pphack" alt="go report card">
-  </a>
-
 <br>
   <!--Tweet button-->
   <a href="https://twitter.com/intent/tweet?text=pphack%20-%20Advanced%20Client-Side%20Prototype%20Pollution%20Scanner%20https%3A%2F%2Fgithub.com%2Fedoardottt%2Fpphack%20%23golang%20%23github%20%23linux%20%23infosec%20%23bugbounty" target="_blank">Share on Twitter!
