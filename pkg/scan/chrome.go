@@ -48,8 +48,8 @@ func GetChromeBrowser(copts []func(*chromedp.ExecAllocator)) (context.CancelFunc
 	ectx, ecancel := chromedp.NewExecAllocator(context.Background(), copts...)
 	pctx, pcancel := chromedp.NewContext(ectx)
 
-	// Run an empty chromedp task to verify the browser starts successfully.
-	if err := chromedp.Run(pctx); err != nil {
+	// Run an empty chromedp step list to verify the browser starts successfully.
+	if err := chromedp.Do(pctx); err != nil {
 		ecancel()
 		gologger.Fatal().Msgf("error starting browser: %s", err.Error())
 	}
@@ -57,16 +57,23 @@ func GetChromeBrowser(copts []func(*chromedp.ExecAllocator)) (context.CancelFunc
 	return ecancel, pctx, pcancel
 }
 
-// buildHeaders is a helper that converts a headers map into a chromedp.Tasks
-// slice containing the SetExtraHTTPHeaders action.
+// buildHeaders is a helper that converts a headers map into a slice of
+// chromedp actions containing the SetExtraHTTPHeaders command.
 // Returns nil if headers is nil, making it safe to append directly onto any
-// existing chromedp.Tasks without an extra nil check at the call site.
-func buildHeaders(headers map[string]interface{}) chromedp.Tasks {
+// existing action slice without an extra nil check at the call site.
+func buildHeaders(headers map[string]interface{}) []chromedp.Action[chromedp.Void] {
 	if headers == nil {
 		return nil
 	}
 
-	return chromedp.Tasks{network.SetExtraHTTPHeaders(network.Headers(headers))}
+	return []chromedp.Action[chromedp.Void]{
+		chromedp.Func(func(ctx context.Context, _ *chromedp.Target) error {
+			_, err := chromedp.Call(ctx, network.SetExtraHTTPHeaders,
+				network.SetExtraHTTPHeadersParams{Headers: network.Headers(headers)})
+
+			return err
+		}),
+	}
 }
 
 // Scan is the core function that performs the prototype pollution scan.
@@ -107,17 +114,18 @@ func Scan(
 	tabCtx, tabCancel := chromedp.NewContext(ctx)
 	defer tabCancel()
 
-	// Build the scan task list: optionally inject custom HTTP headers,
-	// navigate to the target, then evaluate the prototype pollution JS payload.
-	scanTasks := buildHeaders(headers)
-	scanTasks = append(
-		scanTasks,
-		chromedp.Navigate(targetURL),
-		chromedp.EvaluateAsDevTools(js, &resScan),
-	)
+	// Build the scan step list: optionally inject custom HTTP headers, then
+	// navigate to the target.
+	scanSteps := buildHeaders(headers)
+	scanSteps = append(scanSteps, chromedp.Navigate(targetURL))
 
-	// Execute the scan tasks inside the dedicated tab context.
-	errScan := chromedp.Run(tabCtx, scanTasks)
+	// Execute the scan steps inside the dedicated tab context, then evaluate
+	// the prototype pollution JS payload and capture its result.
+	errScan := chromedp.Do(tabCtx, scanSteps...)
+	if errScan == nil {
+		resScan, errScan = chromedp.Run(tabCtx, chromedp.EvaluateAsDevTools[string](js))
+	}
+
 	if errScan != nil {
 		resultData.ScanError = errScan.Error()
 	}
@@ -132,12 +140,8 @@ func Scan(
 		gologger.Info().Label("VULN").Msg(fmt.Sprintf("Target is Vulnerable %s", targetURL))
 	}
 
-	// Run fingerprinting as a separate, isolated task list.
-	fingerprintTasks := chromedp.Tasks{
-		chromedp.EvaluateAsDevTools(exploit.Fingerprint, &resDetection),
-	}
-
-	errDetection := chromedp.Run(tabCtx, fingerprintTasks)
+	// Run fingerprinting as a separate, isolated evaluation.
+	resDetection, errDetection := chromedp.Run(tabCtx, chromedp.EvaluateAsDevTools[[]string](exploit.Fingerprint))
 	if errDetection != nil {
 		gologger.Error().Msg(errDetection.Error())
 		resultData.FingerprintError = errDetection.Error()
