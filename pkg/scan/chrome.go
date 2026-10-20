@@ -70,6 +70,7 @@ func buildHeaders(headers map[string]interface{}) []chromedp.Action[chromedp.Voi
 		chromedp.Func(func(ctx context.Context, _ *chromedp.Target) error {
 			_, err := chromedp.Call(ctx, network.SetExtraHTTPHeaders,
 				network.SetExtraHTTPHeadersParams{Headers: network.Headers(headers)})
+
 			return err
 		}),
 	}
