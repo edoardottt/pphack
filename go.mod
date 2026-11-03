@@ -6,8 +6,8 @@ require (
 	github.com/chromedp/chromedp v0.21.0
 	github.com/edoardottt/golazy v0.1.4
 	github.com/projectdiscovery/goflags v0.2.1
+	github.com/projectdiscovery/utils v0.11.11
 	github.com/projectdiscovery/gologger v1.1.75
-	github.com/projectdiscovery/utils v0.11.10
 	github.com/stretchr/testify v1.12.1
 	go.uber.org/ratelimit v0.3.1
 )
