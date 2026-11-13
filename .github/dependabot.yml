@@ -7,6 +7,8 @@ updates:
     schedule:
       interval: "weekly"
     target-branch: "devel"
+    cooldown:
+      default-days: 7
     commit-message:
       prefix: "deps"
       include: "scope"
