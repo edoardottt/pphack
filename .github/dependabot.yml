@@ -20,11 +20,15 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    target-branch: "devel"
     cooldown:
       default-days: 7
-    target-branch: "devel"
     commit-message:
-      prefix: "chore"
+      prefix: "ci"
       include: "scope"
     labels:
       - "Maintenance"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
